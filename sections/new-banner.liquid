@@ -1,0 +1,331 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<div class="banner">
+  <div class="my-slider">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'slide-item' %}
+          <div class="slide-item">
+            {% if block.settings['image-banner'] == blank %}
+              {{ 'image' | placeholder_svg_tag: bg-banner }}
+            {% else %}
+              <img src="{{block.settings.image-banner | image_url}}" class="bg-banner">
+              <div class="content-banner ">
+                <div
+                  class="text-color-banner featured-content"
+                  style="color: {{block.settings['text-color-banner']}}; font-size: {{block.settings.font_size_featured_text}}px;"
+                >
+                  {{ block.settings['featured-text'] }}
+                </div>
+                <p class="text-color-banner sub-text" style="color: {{block.settings['text-color-banner']}}">
+                  {{ block.settings['sub-text'] }}
+                </p>
+                <div>
+                  {% if block.settings.button1 != blank %}
+                    <a
+                      href="{{block.settings.link-button1 | default: '#'}}"
+                      class="button-banner"
+                      style="color: {{block.settings['text-color-btn']}}"
+                    >
+                      {{- block.settings.button1 -}}
+                    </a>
+                  {% endif %}
+                  {% if block.settings.button2 != blank %}
+                    <a
+                      href="{{block.settings.link-button2 | default: '#'}}"
+                      class="button-banner"
+                      style="color: {{block.settings['text-color-btn']}}"
+                    >
+                      {{- block.settings.button2 -}}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+
+  <button class="btn-nextSlide">
+    <img
+      src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/c01728b3e56f1292a7fd6d9ee9b60fa0.png?v=1680771552"
+      class="arrow"
+    >
+  </button>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('.my-slider').slick({
+      autoplay: true,
+      speed: 300,
+      nextArrow: $('.btn-nextSlide'),
+      prevArrow: false,
+    });
+  });
+</script>
+
+<style>
+   .banner {
+    position: relative;
+    width: 1600px;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .bg-banner {
+    width: 100%;
+    height: 800px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  {% comment %} .bg-banner {
+    width: 100%;
+    height: 800px;
+    {% if section.settings.image-banner == blank %}
+        background-image: url('https://cdn.shopify.com/s/files/1/0744/2530/3338/files/manny-moreno-TbXRTGdDaHY-unsplash_1.png?v=1680591259');
+    {% else %}
+        background-image: url("{{ section.settings.image-banner | image_url }}" );
+    {% endif %}
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    z-index: -10;
+    background-size: cover;
+    background-position: center;
+  } {% endcomment %}
+
+  {% comment %} .bg-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 800px;
+    background-color: rgba(47, 54, 54, 0.3);
+  } {% endcomment %}
+  .text-color-banner {
+    color: #fff;
+  }
+  .sub-text {
+    padding: 15px 0 40px 0;
+  }
+  .featured-content {
+
+    font-weight: 500;
+    width: 400px;
+  }
+  .content-banner {
+    position: absolute;
+    width: 500px;
+    margin-left: 40px;
+    bottom: 105px;
+  }
+
+  .button-banner {
+    padding: 7.5px 60px;
+    width: auto;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    margin-right: 10px;
+
+  }
+  .btn-nextSlide {
+    position: absolute;
+    background-color: #fff;
+    top: 50%;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px 0 0 4px;
+    cursor:pointer;
+  }
+  .arrow {
+    width: 30px;
+    height: 30px
+  }
+  @media (max-width: 1280px) {
+    .banner {
+      position: relative;
+      width: 1600px;
+      height: 650px;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .bg-banner {
+      width: 100%;
+      height: 650px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    .content-banner {
+      margin-left: 30px;
+      bottom: 79px;
+    }
+  }
+  @media (max-width: 1024px) {
+    .banner {
+      position: relative;
+      width: 1600px;
+      height: 550px;
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .bg-banner {
+      width: 100%;
+      height: 550px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    .content-banner {
+      margin-left: 25px;
+      bottom: 66px;
+    }
+  }
+  @media (max-width: 768px) {
+    .banner {
+      height: 360px;
+    }
+    .bg-banner {
+      width: 100%;
+      height: 360px;
+    }
+    .featured-content {
+      font-size: 30px !important;
+      width: 152px;
+    }
+    .content-banner {
+      position: absolute;
+      bottom: 52.5px;
+      margin-left: 20px;
+    }
+    .button-banner {
+      font-size: 14px;
+      padding: 7.5px 30px;
+      width: auto;
+      text-align: center;
+    }
+    .btn-nextSlide {
+      display: none !important;
+    }
+    .sub-text {
+      font-size: 14px;
+      padding: 10px 0 20px 0;
+    }
+
+  }
+  @media (max-width: 640px) {
+    .banner {
+      height: 260px;
+    }
+    .bg-banner {
+      width: 100%;
+      height: 260px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "banner",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "name": "slide-item",
+      "type": "slide-item",
+      "settings": [
+        {
+          "id": "image-banner",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "featured-text",
+          "type": "text",
+          "label": "Featured content",
+          "default": "Extra 50% off Sale"
+        },
+        {
+          "id": "sub-text",
+          "type": "text",
+          "label": "Sub content",
+          "default": "Use code “ss22” in cart to check the discount."
+        },
+        {
+          "id": "button1",
+          "type": "text",
+          "label": "Left button name"
+        },
+        {
+          "type": "url",
+          "id": "link-button1",
+          "label": "Add link to left button"
+        },
+        {
+          "id": "button2",
+          "type": "text",
+          "label": "Right button name"
+        },
+        {
+          "type": "url",
+          "id": "link-button2",
+          "label": "Add link to right button"
+        },
+        {
+          "type": "color",
+          "id": "text-color-banner",
+          "label": "Color text",
+          "default": "#fff"
+        },
+        {
+          "type": "color",
+          "id": "text-color-btn",
+          "label": "Color text button",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "font_size_featured_text",
+          "min": 30,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size",
+          "default": 80
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "banner"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

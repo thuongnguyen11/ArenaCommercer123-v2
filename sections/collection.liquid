@@ -1,0 +1,159 @@
+{% comment %} <div style="display: flex; width: 100%; "> {% endcomment %}
+<div class="collection">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'custom-collection' %}
+        <div class="collection-item">
+          {% if block.settings['collection-image'] == blank %}
+            {{ 'collection-2' | placeholder_svg_tag }}
+          {% else %}
+            <img
+              class="item-image"
+              src="{{block.settings.collection-image | image_url}}"
+            >
+          {% endif %}
+          <a href="{{block.settings['link-collection'] | default: '#'}}" class="btn_collection">
+            {{- block.settings['button-content'] -}}
+          </a>
+        </div>
+    {% endcase %}
+  {% endfor %}
+</div>
+{% comment %} </div> {% endcomment %}
+
+<style>
+  .collection {
+    display: flex;
+    flex-wrap: wrap;
+    {% comment %} overflow-x: scroll; {% endcomment %}
+    width: 100%;
+    margin-top: 2px;
+    {% comment %} margin-bottom: 80px; {% endcomment %}
+    padding: 0;
+    gap: 2px;
+  }
+  .collection-item {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    list-style-type: none;
+    max-width: 319px;
+    max-height: 352px;
+    width: 19.8%;
+    align-items: center;
+  }
+  .item-image {
+    width: 100% !important;
+    height: 352px;
+    object-fit: cover;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .btn_collection {
+    position: absolute;
+    padding: 4.5px 40px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    width: auto;
+    border-radius: 5px;
+    bottom: 40px;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: center;
+    font-size: 14px;
+  }
+  @media (max-width: 1280px) {
+    .item-image {
+      width: 100% !important;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .btn_collection {
+      padding: 4.5px 35px;
+      bottom: 30px;
+    }
+  }
+  @media (max-width: 1024px) {
+    .collection {
+      overflow-x: scroll;
+      white-space: nowrap;
+      margin-top: 2px;
+      flex-wrap: nowrap;
+    }
+    .collection-item {
+      width: 260px;
+      height: 198px;
+    }
+    .item-image {
+      height: 260px !important;
+      width: 198px !important;
+    }
+    .btn_collection {
+      padding: 4.5px 30px;
+
+    }
+  }
+
+  @media (max-width: 768px) {
+    .collection-item {
+      height: 175px;
+      width: 159px;
+    }
+    .item-image {
+      height: 175px !important;
+      width: 159px !important;
+    }
+    .btn_collection {
+      padding: 6px 20px;
+      font-size: 16px;
+      bottom: 20px;
+      margin: 0 35px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "collection",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "name": "collection-item",
+      "type": "custom-collection",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "collection-image",
+          "label": "Edit collection image"
+        },
+        {
+          "type": "text",
+          "id": "button-content",
+          "label": "Collection Image",
+          "default": "Name collection"
+        },
+        {
+          "id": "link-collection",
+          "type": "url",
+          "label": "Add link collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "collection"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

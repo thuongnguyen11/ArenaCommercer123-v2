@@ -1,0 +1,414 @@
+<div class="arrivals">
+  <h1 class="title">{{ section.settings.title }}</h1>
+  {% if section.settings.collection == blank %}
+    <ul class="new-arrivals">
+      {% for product in (1..6) -%}
+        <li class="arrival">
+          <div class="arrival-image">
+            {{ 'collection-3' | placeholder_svg_tag: 'item-image-arrival' }}
+            <div class="tag">
+              <div class="new-tag">new</div>
+              {% comment %} <div class="discount-tag"></div> {% endcomment %}
+            </div>
+            <button class="btn-add-item">
+              {{ 'Add to cart' | link_to: '#', class: 'btn-content' }}
+            </button>
+            <div class="arrival-icons">
+              <button class="icon-item">
+                <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/heart-health-heart-healthcare-health-medical_2.png?v=1680747445">
+              </button>
+              <button class="icon-item">
+                <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/Group_1.png?v=1680747445">
+              </button>
+              <button class="icon-item">
+                <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/search-find-scan-magnifier-research_2.png?v=1680747445">
+              </button>
+            </div>
+          </div>
+          <div class="arrivals-content">
+            <div class="brand-name">Gucci</div>
+            <div class="description">Wash with logo embroidery</div>
+            <div class="price">
+              <div>$202.87</div>
+              <div class="cost"></div>
+            </div>
+          </div>
+        </li>
+      {%- endfor %}
+    </ul>
+  {% else %}
+    <ul class="new-arrivals">
+      {% for product in section.settings.collection.products %}
+        {% for tag in product.tags %}
+          {% if tag == section.settings.tag-product %}
+            <li class="arrival">
+              <a href="{{product.url}}">
+                <div>
+                  <div class="arrival-image">
+                    <img src="{{product.featured_media | image_url}}" class="item-image-arrival">
+                    <div class="tag">
+                      <div class="new-tag">{{ tag }}</div>
+                      {% if product.compare_at_price > product.price %}
+                        <div class="discount-tag">
+                          -
+                          {{-
+                            product.compare_at_price
+                            | minus: product.price
+                            | times: 100.0
+                            | divided_by: product.compare_at_price
+                            | round
+                          -}}
+                          %
+                        </div>
+                      {% endif %}
+                    </div>
+                    <button class="btn-add-item btn-content">Add to cart</button>
+                    <div class="arrival-icons">
+                      <button class="icon-item">
+                        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/heart-health-heart-healthcare-health-medical_2.png?v=1680747445">
+                      </button>
+                      <button class="icon-item">
+                        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/Group_1.png?v=1680747445">
+                      </button>
+                      <button class="icon-item">
+                        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/search-find-scan-magnifier-research_2.png?v=1680747445">
+                      </button>
+                    </div>
+                  </div>
+                  <div class="arrivals-content">
+                    <div class="brand-name">{{ product.vendor }}</div>
+                    <div class="description">{{ product.title }}</div>
+                    <div class="price">
+                      <div>{{ product.price | money }}</div>
+                      <div class="cost">{{ product.compare_at_price | money }}</div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+    <a href="{{section.settings['link-btn-show-more'] | default: '#'}}" class="show-more-arrivals">{{ section.settings['button-content'] }}</a>
+  <hr class="break-section-arrivals">
+</div>
+
+<style>
+  .arrivals {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+  }
+  .title {
+    text-align: center;
+    font-size: 35px;
+    font-weight: 500px;
+    padding-bottom: 35px;
+    width: 300px;
+    overflow: hidden;
+  }
+  .new-arrivals {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 40px;
+    gap: 2px;
+    overflow-x: scroll;
+  }
+  .arrival {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    list-style-type: none;
+    max-width: 250px;
+    width: 16.5%;
+  }
+  .arrival-image {
+    position: relative;
+    max-height: 332px;
+    height: 100%;
+  }
+  .item-image-arrival {
+    height: 332px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .tag {
+    display: flex;
+    position: absolute;
+    font-size: 11px;
+    font-weight: 500px;
+    top: 0;
+    left: 0;
+  }
+
+  .new-tag {
+    padding: 2px 10px;
+    background-color: #fff;
+    color: #000;
+    margin-right: 2px;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .discount-tag {
+    padding: 2px 10px;
+    background-color: #ff6e00;
+    color: #fff;
+    border-radius: 5px;
+  }
+  .discount-tag-none {
+    padding: 2px 10px;
+    background-color: #ff6e00;
+    color: #fff;
+    border-radius: 5px;
+    visibility: hidden;
+  }
+
+  .btn-add-item {
+    position: absolute;
+    bottom: 1px;
+    left: 0;
+    right: 0;
+    background-color: #ff6e00;
+    overflow: hidden;
+    width: 100%;
+    height: 30px;
+    transition: 0.5s ease;
+    border-radius: 5px;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    padding: 8.5px 85.5;
+
+
+  }
+  {% comment %} .btn-content {
+    white-space: nowrap;
+    position: absolute;
+    overflow: hidden;
+    top: 70%;
+    left: 50%;
+    
+  } {% endcomment %}
+
+  .arrival:hover .btn-add-item {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .arrival-icons {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    width: 30px;
+    height: 100px;
+    top: 0;
+    right: 0;
+    transition: 0.5s ease;
+  }
+
+  .icon-item {
+    background-color: #fff;
+    margin: 2px 2px 0 0;
+    padding: 5px;
+    justify-content: center;
+    border-radius: 5px;
+    height: 30px;
+    width: 30px;
+  }
+
+  .arrival:hover .arrival-icons {
+    opacity: 1;
+    cursor: pointer;
+  }
+  .brand-name {
+    color: #808080;
+    font-size: 11px;
+    margin-top: 10px;
+  }
+  .description {
+    margin: 8px 0 14px 0;
+    font-size: 14px;
+  }
+
+  .price {
+    font-size: 14px;
+    display: flex;
+  }
+  .cost {
+    color: #ff6e00;
+    padding-left: 9px;
+    text-decoration: line-through;
+  }
+  .show-more-arrivals {
+    display: block;
+    color: #000;
+    border: 1px solid #000;
+    background-color: transparent;
+    width: auto;
+    padding: 9px 40px;
+    border-radius: 4px;
+    text-align: center;
+    margin: 41px 0 80px 0;
+    font-size: 12px;
+    overflow: hidden;
+    cursor: pointer;
+
+  }
+  .break-section-arrivals{
+    width:95%;
+    text-align:center;
+    margin-bottom: 79px;
+    border-top: 1px solid #e6e6e6;
+  }
+
+  @media (max-width: 1500px) {
+    .item-image-arrival {
+      height: 322px;
+    }
+  }
+  @media (max-width: 1400px) {
+    .item-image-arrival {
+      height: 302px;
+    }
+  }
+  @media (max-width: 1400px) {
+    .item-image-arrival {
+      height: 280px;
+    }
+  }
+  @media (max-width: 1300px) {
+    .item-image-arrival {
+      height: 260px;
+    }
+  }
+  @media (max-width: 1280px) {
+    .item-image-arrival {
+      height: 230px;
+    }
+  }
+ 
+  @media (max-width: 1024px) {
+    .arrivals {
+      padding-top: 0px;
+    }
+    .title {
+      font-size: 20px;
+      padding: 19px 0;
+    }
+    .arrival {
+      width: 169px;
+    }
+    .item-image-arrival {
+      width: 169px;
+      height: 224px;
+    }
+    .description{
+      font-size: 13px;
+      margin: 6px 0 12px 0;
+    }
+    .tag {
+      font-size: 12px;
+    }
+    .arrivals-content {
+      font-size: 13px;
+      {% comment %} overflow: hidden; {% endcomment %}
+    }
+    .new-arrivals {
+      overflow-x: scroll;
+      padding: 0 16px;
+    }
+    .btn-add-item{
+      width: 169px;
+    }
+    .btn-content {
+      font-size: 13px;
+    }
+    .show-more-arrivals {
+      width: auto;
+      padding: 6.5px 20px;
+      margin: 10px 0;
+      font-size: 14px;
+      margin: 7px 20px;
+
+    }
+    .break-section-arrivals {
+      display: none;
+    }
+    .arrival:hover .btn-add-item {
+      opacity: 0;
+    }
+    .arrival:hover .arrival-icons {
+      opacity: 0;
+    }
+  }
+  
+</style>
+
+{% schema %}
+{
+  "name": "new-arrival",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "id": "tag-product",
+      "type": "select",
+      "label": "Choose tag",
+      "options": [
+        {
+          "value": "new",
+          "label": "New"
+        },
+        {
+          "value": "bestseller",
+          "label": "Bestseller"
+        }
+      ],
+      "default": "new"
+    },
+    {
+      "type": "text",
+      "id": "button-content",
+      "label": "Edit text button",
+      "default": "Show all new arrivals"
+    },
+    {
+      "type": "url",
+      "id": "link-btn-show-more",
+      "label": "Add link button show all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "new-arrivals"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

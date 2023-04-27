@@ -1,0 +1,144 @@
+<div class="new-newsletter">
+  <h1 class="title-newsletter">{{ section.settings['title-newsletter'] }}</h1>
+  <form class="email">
+    <input type="email" id="emails" name="emails" placeholder="{{section.settings.placeholder}}" class="input-email">
+    <button class="btn-subscribe">{{ section.settings['btn-submit'] }}</button>
+  </form>
+</div>
+
+<style>
+  .new-newsletter {
+    text-align: center;
+    margin: 80px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .title-newsletter {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 30.8px;
+    margin-bottom: 30px;
+    width: 704px;
+  }
+  .email {
+    display: flex;
+    justify-content: center;
+  }
+  .input-email {
+    height: 36px;
+    border-radius: 4px;
+    padding: 0 20px;
+    width: 360px;
+    font-size: 14px;
+    border: 1px solid transparent;
+    background-color: #f2f2f2;
+  }
+
+  .input-email::placeholder {
+    color: #191919;
+    font-size: 15px;
+  }
+  .btn-subscribe {
+    background-color: {{section.settings.color-btn-submit}};
+    font-size: 14px;
+    padding: 7.5px 60px;
+    width: auto;
+    color: {{section.settings.color-text-btn-submit}};
+    cursor: pointer;
+    text-overflow: '----';
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  @media (max-width: 1280px) {
+    {% comment %} .new-newsletter {
+      margin: 40px 12px;
+    } {% endcomment %}
+  }
+  @media (max-width: 768px) {
+    .new-newsletter {
+      margin: 40px 12px;
+    }
+    .title-newsletter {
+      font-size: 20px;
+      line-height: 22px;
+      margin-bottom: 36.5px;
+      width: 352px;
+    }
+    .email {
+      display: flex;
+      justify-content: center;
+    }
+    .input-email {
+      height: 36px;
+      border-radius: 4px;
+      padding: 0 20px;
+      width: 209px;
+      border: 1px solid transparent;
+      background-color: #f2f2f2;
+    }
+
+    .input-email::placeholder {
+      color: #191919;
+      font-size: 15px;
+    }
+    .btn-subscribe {
+      padding: 6px 32px;
+      width: 141px;
+      font-size: 16px;
+      border-radius: 4px;
+      color: #fff;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "new-newsletter",
+  "tag": "section",
+  "settings": [
+    {
+      "id": "title-newsletter",
+      "type": "textarea",
+      "label": "Edit title newsletter",
+      "default": "Join our newsletter <br> and get $20 for your first order"
+    },
+    {
+      "id": "placeholder",
+      "type": "text",
+      "label": "Edit placeholder",
+      "default": "Your e-mail address"
+    },
+    {
+      "id": "btn-submit",
+      "type": "text",
+      "label": "Edit text button submit",
+      "default": "Subscribe"
+    },
+    {
+      "id": "color-btn-submit",
+      "type": "color",
+      "label": "Change color button submit",
+      "default": "#ff6e00"
+    },
+    {
+      "id": "color-text-btn-submit",
+      "type": "color",
+      "label": "Change color text button submit",
+      "default": "#fff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "new-newsletter"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

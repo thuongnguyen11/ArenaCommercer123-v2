@@ -1,0 +1,218 @@
+<div class="display">
+  <ul class="three-banner">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'banner-item' %}
+          <li class="banner-item">
+            {% if block.settings['banner-image'] == blank %}
+              {{ 'image' | placeholder_svg_tag: 'item-image-banner '}}
+            {% else %}
+              <img class='item-image-banner' src="{{block.settings.banner-image | image_url}}" >
+            {% endif %}
+            <div class="title-3banner">
+              <div class="title-banner">{{ block.settings['title-banner'] }}</div>
+              <a href="{{block.settings.sub-title-link| default: '#'}}" class="sub-title-banner">{{ block.settings['sub-title-banner'] }}</a>
+            </div>
+          </li>
+      {% endcase %}
+    {% endfor %}
+  </ul>
+  {% if section.blocks != blank %}
+    <hr class="break-banner">
+  {% endif %}
+</div>
+<style>
+  .display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .three-banner {
+    display: flex;
+    margin: 0 300px;
+    justify-content: center;
+    width: 100%;
+  }
+  .banner-item {
+    margin: 0 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    object-fit: cover;
+  }
+  .item-image-banner {
+    width: 332px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .title-3banner {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .title-banner {
+    margin: 20px 0 10px 0;
+  }
+  .sub-title-banner {
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .sub-title-banner:hover {
+    color: #81624a;
+  }
+  .break-banner {
+    width: 95%;
+    text-align: center;
+    margin-top: 120px;
+    border-top: 1px solid #e6e6e6;
+  }
+  @media (max-width: 1280px) {
+    .display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .three-banner {
+      display: flex;
+      margin: 0 300px;
+      justify-content: center;
+      width: 100%;
+    }
+    .banner-item {
+      margin: 0 1px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      object-fit: cover;
+    }
+    .item-image-banner {
+      width: 250px;
+      height: 277px;
+      object-fit: cover;
+    }
+    .title-3banner {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .title-banner {
+      margin: 20px 0 10px 0;
+    }
+    .sub-title-banner {
+      text-decoration: underline;
+      font-size: 16px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+    .sub-title-banner:hover {
+      color: #81624a;
+    }
+    .break-banner {
+      width: 95%;
+      text-align: center;
+      margin-top: 120px;
+      border-top: 1px solid #e6e6e6;
+    }
+  }
+  @media (max-width: 1024px) {
+  .display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 25px 0 0 0;
+    }
+    .banner-item {
+      width: 230px;
+      height: auto;
+    }
+    .title-3banner {
+      font-size: 16px;
+    }
+    .title-banner {
+      margin: 10px 0 5px 0;
+    }
+    .sub-title-banner {
+      font-size: 13px;
+    }
+    .three-banner {
+      padding: 0 12px;
+      overflow-x: scroll;
+    }
+    .item-image-banner {
+      width: 230px;
+      height: 191px;
+    }
+    .break-banner {
+      margin-top: 39px;
+    }
+  }
+  @media (max-width: 768px) {
+    
+    .banner-item {
+      width: 212px;
+    }
+    
+    .item-image-banner {
+      width: 212px;
+      height: 191px;
+    }
+    
+  }
+  @media (max-width: 640px) {
+    .three-banner {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "three-banners",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "name": "banner-item",
+      "type": "banner-item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "banner-image",
+          "label": "Edit banner image"
+        },
+        {
+          "type": "text",
+          "id": "title-banner",
+          "label": "Edit title banner",
+          "default": " Title banner"
+        },
+        {
+          "type": "text",
+          "id": "sub-title-banner",
+          "label": "Edit text show more",
+          "default": "Show more"
+        },
+        {
+          "type": "url",
+          "id": "sub-title-link",
+          "label": "Add link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "three-banners"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

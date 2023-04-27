@@ -1,0 +1,72 @@
+.main-collection {
+  display: flex;
+  flex-direction: column;
+  margin: 50px 20px 0;
+}
+
+.main-collection .title-collection {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.main-collection .description-collection {
+  margin-bottom: 20px;
+}
+
+.main-collection .collection-toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+.main-collection .collection-toolbar .filter .btn-filter {
+  width: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #000;
+  border-radius: 7px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.main-collection .collection-toolbar .filter .btn-filter .filter-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.main-collection .collection-toolbar .filter .dropdown-filter {
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+}
+
+.main-collection .products {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.main-collection .products .product-item {
+  width: 23%;
+  cursor: pointer;
+}
+
+.main-collection .products .product-item .product-image {
+  height: 341px;
+  width: 100%;
+  transition: transform .2s;
+}
+
+.main-collection .products .product-item .product-content {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.main-collection .products .product-item:hover .product-image {
+  opacity: .5;
+}

@@ -1,0 +1,193 @@
+<div class="sub-banner">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'sub-banner-item' %}
+        <div class="image">
+          {% if block.settings['sub-image-banner'] == blank %}
+            {{ 'image' | placeholder_svg_tag: 'bg-image' }}
+          {% else %}
+            <img
+              class="bg-image"
+              src="{{block.settings.sub-image-banner | image_url}}"
+              width="100%"
+              height="100%"
+            >
+          {% endif %}
+          <div class="sub-content-banner text-white">
+            <div class="featured-text" style="color: {{block.settings['color-featured-text']}}">
+              {{ block.settings['featured-text'] }}
+            </div>
+            <div class="content" style="color: {{block.settings.color-sub-text}}">
+              <a href="{{block.settings['link-sub-text'] | default: '#'}}">{{ block.settings['sub-text'] }}</a>
+            </div>
+          </div>
+        </div>
+    {% endcase %}
+  {% endfor %}
+</div>
+
+<style>
+  .sub-banner {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .image {
+    position: relative;
+    width: 49.92%;
+    height: 750px;
+    margin-top: 2px;
+  }
+  .bg-image {
+    border-radius: 5px;
+    object-fit: cover;
+  }
+
+  .sub-content-banner {
+    color: #000;
+    position: absolute;
+    bottom: 103px;
+    left: 40px;
+    overflow: hidden;
+  }
+
+  .featured-text {
+    font-size: 60px;
+    line-height: 66px;
+    width: 357px;
+    height: 247px;
+  }
+
+  .text-white {
+    color: #fff;
+  }
+  .content {
+    text-decoration: underline;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  @media (max-width: 1280px) {
+    .image {
+      height: 600px;
+    }
+    .sub-content-banner {
+      bottom: 77.25px;
+      left: 30px;
+    }
+  }
+  @media (max-width: 1024px) {
+    .image {
+      height: 500px;
+    }
+    .sub-content-banner {
+      bottom: 64.5px;
+      left: 25px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sub-banner {
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .sub-content-banner {
+      width: 179px;
+      bottom: 51.5px;
+      left: 20px;
+    }
+
+    .featured-text {
+      font-size: 30px;
+      width: 179px;
+      height: 99px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 110%;
+      margin-bottom: 10px;
+    }
+    .image {
+      width: 100%;
+      height: 366px;
+      margin: 2px 0 0 0;
+    }
+
+    .text-white {
+      color: #fff;
+    }
+    .content {
+      text-decoration: underline;
+      font-size: 14px;
+    }
+  }
+  @media (max-width: 640px) {
+    .sub-content-banner {
+      width: 179px;
+      bottom: 35px;
+      left: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "sub-banner",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "name": "sub-banner-item",
+      "type": "sub-banner-item",
+      "settings": [
+        {
+          "id": "sub-image-banner",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "featured-text",
+          "type": "textarea",
+          "label": "Featured content",
+          "default": "Looking for new shoes?"
+        },
+        {
+          "id": "sub-text",
+          "type": "text",
+          "label": "Sub text",
+          "default": "Sneakers on sale"
+        },
+        {
+          "id": "link-sub-text",
+          "type": "url",
+          "label": "Add link"
+        },
+        {
+          "type": "color",
+          "id": "color-featured-text",
+          "label": "Color featured text",
+          "default": "#000000"
+        },
+        {
+          "type": "color",
+          "id": "color-sub-text",
+          "label": "Color sub text",
+          "default": "#000000"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sub-banner"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

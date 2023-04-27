@@ -1,0 +1,239 @@
+<div class="new-footer">
+  <div class="social">
+    <hr class="break ">
+    <ul class="icons-footer">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'icon-social' %}
+            <li class="icon-footer">
+              {% if block.settings['social-image'] == blank %}
+                {{ 'image' | placeholder_svg_tag: 'social-item'}}
+              {% else %}
+                <a href="{{block.settings.social-link | default:'#'}}">
+                  <img src="{{block.settings.social-image | image_url}}" class="social-item">
+                </a>
+              {% endif %}
+            </li>
+        {% endcase %}
+      {% endfor %}
+    </ul>
+    <hr class="break ">
+  </div>
+  <div class="categories-link">
+    <ul class="categories">
+      {% for block in section.blocks -%}
+        {% case block.type %}
+          {% when 'category' %}
+            <li class="category"><a href="{{block.settings.link_category | default: '#'}}">{{block.settings.name-category}}</a></li>
+        {% endcase %}
+      {% endfor %}
+    </ul>
+    <hr class="break-footer">
+  </div>
+  <div class="infomation">
+    <div class="copyright">{{ section.settings.copyright }}</div>
+    <ul class="payment-methods">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'payment-method' %}
+            <li class="payment-method">
+              {% if block.settings['payment-image'] == blank %}
+                {{ 'image' | placeholder_svg_tag }}
+              {% else %}
+                <img src="{{block.settings.payment-image | image_url }}" class="payment-item">
+              {% endif %}
+            </li>
+        {% endcase %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .new-footer {
+    padding: 89px 40px 41px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .social {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .icons-footer {
+    display: flex;
+    height: 19px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    top: 0;
+    margin: 0 40px;
+  }
+
+  .icon-footer {
+    margin: 0 20px;
+    cursor: pointer;
+  }
+  .social-item {
+    width: auto;
+    height: auto;
+    max-width: 20px;
+    max-height: 20px;
+  }
+  .line {
+    border: 1px solid #e6e6e6;
+    color: red;
+  }
+  .break {
+    width: 590px;
+    text-align: center;
+    border-top: 1px solid #e6e6e6;
+    margin-top: 0;
+  }
+  .infomation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 53px;
+  }
+  .copyright {
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .payment-methods {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 25px;
+    gap: 11.5px;
+  }
+  
+  .payment-item {
+    width: auto;
+    height: auto;
+    max-width: 28px;
+    max-height: 25px;
+  }
+  .categories-link {
+    display: none;
+  }
+
+  
+  @media (max-width: 1024px) {
+    .new-footer {
+      padding: 40px 17px 20px 17px;
+      width: 100%;
+    }
+    .icons-footer {
+      margin: 0 30px;
+    }
+    .icon-footer {
+      margin: 0 10px;
+    }
+    .infomation {
+      margin-top: 25px;
+      flex-direction: column;
+      align-items: center;
+    }
+    .categories-link {
+      display: block;
+      width: 100%;
+    }
+    .categories {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 30px 0;
+    }
+    .category {
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .copyright {
+      margin-bottom: 12px;
+    }
+   
+    .break-footer {
+      width: 100%;
+      text-align: center;
+      margin-top: 0;
+      border-top: 1px solid #e6e6e6;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "new-footer",
+  "tag": "section",
+  "settings": [
+    {
+      "id": "copyright",
+      "type": "text",
+      "label": "Copyright",
+      "default": "Copyright © 2023 arenacommerce. All Rights Reserved"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "payment-method",
+      "type": "payment-method",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "payment-image",
+          "label": "Edit payment image"
+        }
+      ]
+    },
+    {
+      "name": "icon-social",
+      "type": "icon-social",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "social-image",
+          "label": "Edit social image"
+        },
+        {
+          "type": "url",
+          "id": "social-link",
+          "label": "Add link"
+        }
+      ]
+    },
+    {
+      "name": "category",
+      "type": "category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name-category",
+          "label": "Edit name category",
+          "default": "Name category"
+        },
+        {
+          "type": "url",
+          "id": "link-category",
+          "label": "Add link category"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "new-footer"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

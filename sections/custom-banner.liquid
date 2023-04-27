@@ -1,0 +1,592 @@
+{% comment %}
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+{% endcomment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+
+{% liquid
+  assign height_banner = section.settings.height_banner
+  assign height_banner_array = height_banner | split: ','
+  assign height_banner_mobile = height_banner_array[0]
+  assign height_banner_desktop = height_banner_array[1]
+
+  assign height_banner_image = section.settings.height_banner_image
+  assign height_banner_image_array = height_banner_image | split: ','
+  assign height_banner_image_mobile = height_banner_image_array[0]
+  assign height_banner_image_desktop = height_banner_image_array[1]
+
+  assign width_item = section.settings.width_item
+  assign width_item_array = width_item | split: ','
+  assign width_item_mobile = width_item_array[0]
+  assign width_item_desktop = width_item_array[1]
+
+  assign margin_top_banner = section.settings.margin_top_banner
+  assign margin_top_banner_array = margin_top_banner | split: ','
+  assign margin_top_banner_mobile = margin_top_banner_array[0]
+  assign margin_top_banner_desktop = margin_top_banner_array[1]
+
+  assign margin_bottom_banner = section.settings.margin_bottom_banner
+  assign margin_bottom_banner_array = margin_bottom_banner | split: ','
+  assign margin_bottom_banner_mobile = margin_bottom_banner_array[0]
+  assign margin_bottom_banner_desktop = margin_bottom_banner_array[1]
+
+  assign isSlider = section.settings.slider
+
+  assign width_item_slider = section.settings.width_item_slider
+
+  assign max_width_banner = section.settings.max_width_banner
+  assign max_width_banner_array = max_width_banner | split: ','
+  assign max_width_banner_mobile = max_width_banner_array[0]
+  assign max_width_banner_desktop = max_width_banner_array[1]
+%}
+
+{{ 'custom-banner.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .{{section.id}}-custom.new-custom-banner{
+      --margin_top_banner_mobile: {{margin_top_banner_mobile | append: 'px'}};
+      --margin_top_banner_desktop: {{margin_top_banner_desktop | append: 'px'}};
+      --margin_bottom_banner_mobile: {{margin_bottom_banner_mobile | append: 'px'}};
+      --margin_bottom_banner_desktop: {{margin_bottom_banner_desktop | append: 'px'}};
+      --max_width_banner_mobile: {{max_width_banner_mobile}};
+      --max_width_banner_desktop: {{max_width_banner_desktop}};
+  }
+
+  .{{section.id}}-custom.new-custom-banner .title-custom-banner{
+    margin-bottom: {{section.settings.margin_bottom_title}}px;
+    font-size: {{section.settings.fontsize_title}}px;
+  }
+  .{{section.id}}-custom.new-custom-banner .custom-banner{
+      {%if section.settings.aspect_ratio== '1-1' %}
+        display: flex;
+        {%if section.settings.slider ==false %}
+        flex-wrap: wrap;
+        {%endif%}
+      {%else%}
+      display: grid;
+      {%endif%}
+      gap: {{section.settings.gap}}px;
+  }
+
+  .{{section.id}}-custom.new-custom-banner .banner-item {
+    --width_item_mobile: {{ width_item_mobile }};
+    --width_item_desktop: {{ width_item_desktop }};
+    --width_item:{%if section.settings.slider == true%} {{width_item_slider}}{%else%}{{width_item_desktop}} {%endif%}
+  }
+</style>
+<div class="{{section.id}}-custom new-custom-banner">
+  <div class="title-custom-banner">
+    {{ section.settings.title_custom_banner }}
+  </div>
+
+  {% if section.settings.count_up %}
+    <div class="sub-title" id="{{section.id}}-js-count-up" data-time="5000">{{ section.settings.number_count_up }}</div>
+  {% endif %}
+  <div
+    class="custom-banner banner-{{section.settings.aspect_ratio}} {%if section.settings.slider%}owl-carousel{%endif%}" 
+    data-numOfItemMobile= "{{section.settings.number_of_slide_in_mobile}}"
+    data-numOfItem768= "{{section.settings.number_of_slide_in_768}}"
+    data-numOfItem992= "{{section.settings.number_of_slide_in_992}}"
+    data-numOfItemDesktop= "{{section.settings.number_of_slide_in_desktop}}"
+    data-spacing="{{section.settings.spacing}}"
+  >
+    
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'custom_banner_item' %}
+          {% liquid
+            assign fontsize_featured_text = block.settings.font_size_featured_text
+            assign fontsize_featured_text_array = fontsize_featured_text | split: ','
+            assign fontsize_featured_text_mobile = fontsize_featured_text_array[0]
+            assign fontsize_featured_text_992 = fontsize_featured_text_array[1]
+            assign fontsize_featured_text_1280 = fontsize_featured_text_array[2]
+            assign fontsize_featured_text_desktop = fontsize_featured_text_array[3]
+
+            assign padding_left_right_btn = block.settings.padding_left_right_btn
+            assign padding_left_right_btn_array = padding_left_right_btn | split: ','
+            assign padding_left_right_btn_mobile = padding_left_right_btn_array[0]
+            assign padding_left_right_btn_desktop = padding_left_right_btn_array[1]
+
+            assign margin_top_btn = block.settings.margin_top_btn
+            assign margin_top_btn_array = margin_top_btn | split: ','
+            assign margin_top_btn_mobile = margin_top_btn_array[0]
+            assign margin_top_btn_desktop = margin_top_btn_array[1]
+
+            assign line_height = block.settings.line_height_all_screen
+            assign line_height_array = line_height | split: ','
+            assign line_height_mobile = line_height_array[0]
+            assign line_height_992 = line_height_array[1]
+            assign line_height_1280 = line_height_array[2]
+            assign line_height_desktop = line_height_array[3]
+          %}
+
+          <div class="item-{{block.id}} banner-item banner-item-{{section.settings.positions_content}}">
+          
+            <style>
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .banner-item-content {
+                {%if section.settings.isCenter%}
+                --top: 50%;
+                --transform: translateY(-50%);
+                {%endif%}
+              }
+
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .banner-featured-text {
+                --color: {{block.settings['banner_text_color']}};
+                --fontsize_featured_text_mobile: {{ fontsize_featured_text_mobile | append: 'px'}};
+                --fontsize_featured_text_992: {{ fontsize_featured_text_992 | append: 'px'}};
+                --fontsize_featured_text_1280: {{ fontsize_featured_text_1280 | append: 'px'}};
+                --fontsize_featured_text_desktop: {{ fontsize_featured_text_desktop | append: 'px'}};
+
+                --line_height_mobile: {{line_height_mobile | append: 'px'}};
+                --line_height_992: {{line_height_992 | append: 'px'}};
+                --line_height_1280: {{line_height_1280 | append: 'px'}};
+                --line_height_desktop: {{line_height_desktop | append: 'px'}};
+              }
+
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .banner-btn-button{
+                --margin_top_btn_mobile: {{margin_top_btn_mobile | append: 'px'}};
+                --margin_top_btn_desktop: {{margin_top_btn_desktop | append: 'px'}};
+              }
+
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .btn1 {
+                --color: {{block.settings['banner_text_color_btn']}};
+                      {%if block.settings.isBorder%}
+                      --border: {{block.settings.border_color_banner_btn1}};
+                      --text-align: center;
+                      {%endif%}
+                      --background-color: {{block.settings.bg_color_btn1}};
+                      {%if block.settings.underline%}
+                      --text-decoration: underline;
+                      {%endif%}
+                      --padding_left_right_btn_mobile: {{ padding_left_right_btn_mobile | append: 'px'}};
+                      --padding_left_right_btn_desktop: {{ padding_left_right_btn_desktop | append: 'px'}};
+              }
+
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .btn2 {
+                --color: {{block.settings['banner_text_color_btn']}};
+                      {%if block.settings.isBorder%}
+                      --border: {{block.settings.border_color_banner_btn2}};
+                      --text-align: center;
+                      {%endif%}
+                      --background-color: {{block.settings.bg_color_btn2}};
+                      {%if block.settings.underline%}
+                      --text-decoration: underline;
+                      {%endif%}
+                      --padding_left_right_btn_mobile: {{ padding_left_right_btn_mobile | append: 'px'}};
+                      --padding_left_right_btn_desktop: {{ padding_left_right_btn_desktop | append: 'px'}};
+              }
+
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .banner-item-bg{
+                height: {{section.settings.height_banner_image_option}}
+              }
+
+              .item-{{block.id}}.banner-item.banner-item-{{section.settings.positions_content}} .banner-item-bg2{
+                height: {{section.settings.height_banner_image_option}}
+              }
+            </style>
+            {% assign banner_image = block.settings.banner_image %}
+            {% assign banner_image_mobile = block.settings.banner_image_mobile | default: banner_image %}
+
+            {% if banner_image == blank %}
+              <div class="banner-item-bg banner-item-bg-{{section.settings.positions_content}}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% else %}
+              <img
+                src="{{banner_image | image_url}} "
+                class="banner-item-bg banner-item-bg-{{section.settings.positions_content}}"
+              >
+            {% endif %}
+
+            <img
+              src="{{banner_image_mobile | image_url}} "
+              class="banner-item-bg2 banner-item-bg-{{section.settings.positions_content}}"
+            >
+
+            <div
+              class="banner-item-content banner-item-content-{{section.settings.positions_content}} {%if section.settings.isCenter%}content-center{%endif%}"
+            >
+              <div
+                class="banner-featured-text"
+              >
+                {{ block.settings.banner_featured_text }}
+              </div>
+              <div class="banner-sub-text" style="color: {{block.settings['banner_text_color']}}">
+                {{ block.settings.banner_sub_text }}
+              </div>
+              <div
+                class="banner-btn-button"
+              >
+                {% if block.settings.banner_button1 != blank %}
+                  <a
+                    href="{{block.settings.banner_link_button1 | default: '#'}}"
+                    class="btn1 {%if block.settings.default_btn%}default-button{%endif%}"
+                  >
+                    {{- block.settings.banner_button1 -}}
+                  </a>
+                {% endif %}
+                {% if block.settings.banner_button2 != blank %}
+                  <a
+                    href="{{block.settings.banner_link_button2 | default: '#'}}"
+                    class="btn2 {%if block.settings.default_btn%}default-button{%endif%}"
+                  >
+                    {{- block.settings.banner_button2 -}}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  var numberCountUp = '{{section.id}}-js-count-up';
+  onCountUp();
+</script>
+
+{% schema %}
+{
+  "name": "Custom banner", 
+  "class": "abc",
+  "tag": "section",
+  "settings": [
+    {
+      "id": "title_custom_banner",
+      "type": "text",
+      "label": "Title banner"
+    },
+    {
+      "id": "fontsize_title",
+      "type": "text",
+      "label": "Font size title",
+      "default": "30"
+    },
+
+    {
+      "type": "range",
+      "id": "margin_bottom_title",
+      "label": "Change margin bottom title",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "id": "aspect_ratio",
+      "type": "select",
+      "label": "Aspect ratio",
+      "options": [
+        {
+          "value": "1-2",
+          "label": "1:2"
+        },
+        {
+          "value": "2-1",
+          "label": "2:1"
+        },
+        {
+          "value": "1-1",
+          "label": "1:1"
+        }
+      ],
+      "default": "1-2"
+    },
+    {
+      "type": "checkbox",
+      "id": "count_up",
+      "label": "Count up",
+      "default": false
+    },
+    {
+      "id": "number_count_up",
+      "type": "number",
+      "label": "Number count up",
+      "default": 99999
+    },
+    {
+      "id": "width_item",
+      "type": "text",
+      "label": "Change width banner item (mobile, desktop)",
+      "default": "100%, 100%"
+    },
+    {
+      "id": "width_item_slider",
+      "type": "text",
+      "label": "Change width banner item when slider",
+      "default": "100%"
+    },
+    {
+      "id": "height_banner_image_option",
+      "type": "select",
+      "label": "Change height option ",
+      "options": [
+        {
+          "value": "100%",
+          "label": "100%"
+        },
+        {
+          "value": "auto",
+          "label": "auto"
+        }
+      ],
+      "default": "100%"
+    },
+    {
+      "id": "margin_top_banner",
+      "type": "text",
+      "label": "Change margin top banner (mobile, desktop)",
+      "default": "0, 0"
+    },
+    {
+      "id": "margin_bottom_banner",
+      "type": "text",
+      "label": "Change margin bottom banner (mobile, desktop)",
+      "default": "0, 0"
+    },
+    {
+      "id": "max_width_banner",
+      "type": "text",
+      "label": "Change max width banner(px) (mobile, desktop)",
+      "default": "100%, 100%"
+    },
+    {
+      "id": "positions_content",
+      "type": "select",
+      "label": "Position content",
+      "options": [
+        {
+          "value": "over-image-center",
+          "label": "Over image - center"
+        },
+        {
+          "value": "over-image-left",
+          "label": "Over image - bottom_left"
+        },
+        {
+          "value": "over-image-right",
+          "label": "Over image - right"
+        },
+        {
+          "value": "below-image-center",
+          "label": "Below image - center"
+        },
+        {
+          "value": "below-image-left",
+          "label": "Below image - left"
+        },
+        {
+          "value": "below-image-right",
+          "label": "Below image - right"
+        }
+      ],
+      "default": "over-image-left"
+    },
+    {
+      "type": "checkbox",
+      "id": "isCenter",
+      "label": "isCenter",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "slider",
+      "label": "Slider",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "number_of_slide_in_mobile",
+      "label": "Number of images displayed when slide in mobile",
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "number_of_slide_in_768",
+      "label": "Number of images displayed when slide in screen 768px",
+      "default": 3
+    },
+    {
+      "type": "number",
+      "id": "number_of_slide_in_992",
+      "label": "Number of images displayed when slide in screen 992px",
+      "default": 4
+    },
+
+    {
+      "type": "number",
+      "id": "number_of_slide_in_desktop",
+      "label": "Number of images displayed when slide in desktop",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Change the spacing between items when run slide",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Change the spacing between items",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Custom banner item",
+      "type": "custom_banner_item",
+      "settings": [
+        {
+          "id": "banner_image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "banner_image_mobile",
+          "type": "image_picker",
+          "label": "Image mobile"
+        },
+        {
+          "id": "banner_featured_text",
+          "type": "textarea",
+          "label": "Featured content"
+          //"default": "Extra 50% off Sale"
+        },
+        {
+          "id": "banner_sub_text",
+          "type": "text",
+          "label": "Sub content"
+          //"default": "Use code “ss22” in cart to check the discount."
+        },
+        {
+          "id": "banner_button1",
+          "type": "text",
+          "label": "Left button name"
+        },
+        {
+          "type": "url",
+          "id": "banner_link_button1",
+          "label": "Add link to left button"
+        },
+        {
+          "type": "checkbox",
+          "id": "isBorder",
+          "label": "Border",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "default_btn",
+          "label": "Default button",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "border_color_banner_btn1",
+          "label": "Color border button left",
+          "default": "transparent"
+        },
+        {
+          "type": "color",
+          "id": "bg_color_btn1",
+          "label": "Background color button left",
+          "default": "#fff"
+        },
+        {
+          "id": "banner_button2",
+          "type": "text",
+          "label": "Right button name"
+        },
+        {
+          "type": "url",
+          "id": "banner_link_button2",
+          "label": "Add link to right button"
+        },
+        {
+          "type": "color",
+          "id": "border_color_banner_btn2",
+          "label": "Color border button right",
+          "default": "transparent"
+        },
+        {
+          "type": "color",
+          "id": "bg_color_btn2",
+          "label": "Background color button right",
+          "default": "#fff"
+        },
+        {
+          "type": "color",
+          "id": "banner_text_color",
+          "label": "Color text",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "banner_text_color_btn",
+          "label": "Color text button",
+          "default": "#000000"
+        },
+
+        {
+          "type": "text",
+          "id": "font_size_featured_text",
+          "label": "Font size featured text (mobile -> desktop)",
+          "default": "32, 35, 50, 60"
+        },
+        {
+          "id": "line_height_all_screen",
+          "type": "text",
+          "label": "Change line height featured text",
+          "default": "35.2, 40, 50, 60"
+        },
+        {
+          "type": "checkbox",
+          "id": "underline",
+          "label": "Underline text button",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "padding_left_right_btn",
+          "label": "Change padding left right button (mobile, desktop)",
+          "default": "60, 60"
+        },
+
+        {
+          "type": "text",
+          "id": "margin_top_btn",
+          "label": "Change margin top button (mobile, desktop)",
+          "default": "12, 40"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "custom-banner"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
+
+
+{{ 'slider.js' | asset_url | script_tag }}
+{{ 'theme-editor.js' | asset_url | script_tag }}

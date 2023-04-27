@@ -1,0 +1,272 @@
+  .row {
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 97px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100px;
+    height: 31px;
+  }
+
+  .icon-logo {
+    width: 100%;
+    height: 100%;
+  }
+
+  .menu-header {
+    display: flex;
+    list-style: none;
+  }
+
+  .item-menu {
+    position: relative;
+    padding: 0 10px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .item-menu:hover {
+    color: #ff6e00;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .item-menu:hover a {
+    color: #ff6e00;
+  }
+
+  .item-menu a {
+    text-decoration: none;
+  }
+
+  .icons-menu {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon-menu {
+    padding: 0 16px;
+    position: relative;
+    cursor: pointer;
+
+  }
+
+  .number {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 3px;
+    background-color: #797979;
+    font-size: 11px;
+    text-align: center;
+    position: absolute;
+    top: -11px;
+    right: 7px;
+    color: #fff;
+
+  }
+
+  .btn-menu-header {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: none;
+    z-index: 1000;
+  }
+
+  .mobile-icons-header {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-item-menu {
+    font-size: 15px;
+    font-weight: 400;
+    margin: 10px 0;
+  }
+
+  .logo.logo-left {
+    order: 1;
+  }
+
+  .menu-header.menu-header-left {
+    order: 2;
+  }
+
+  .mobile-icons-header.mobile-icons-header-left {
+    order: 3;
+  }
+
+  .logo.logo-center {
+    order: 2;
+  }
+
+  .menu-header.menu-header-center {
+    order: 1;
+  }
+
+  .mobile-icons-header.mobile-icons-header-center {
+    order: 3;
+  }
+
+  .logo.logo-right {
+    order: 3;
+  }
+
+  .menu-header.menu-header-right {
+    order: 2;
+  }
+
+  .mobile-icons-header.mobile-icons-header-right {
+    order: 1;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 12px 16px;
+    z-index: 1;
+    width: 200px;
+    color: #000;
+    top: 25px;
+  }
+  .sub-menu{
+    display: block;
+    margin: 5px 0;
+  }
+  .item-menu:hover .dropdown-menu {
+    display: block;
+  }
+  .item-menu:hover .dropdown-menu .sub-menu {
+    color: #000;
+  }
+  
+
+  @media (max-width: 1280px) {
+    .logo {
+      width: 85px;
+      height: 26.35px;
+    }
+
+    .item-menu {
+      font-size: 14px;
+    }
+
+    .icon-menu {
+      padding: 0 10px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .row {
+      height: 60px !important;
+      padding: 15px 40px;
+    }
+
+    .logo {
+      width: 85px;
+      height: 26.35px;
+    }
+
+    .icons-menu {
+      padding-right: 22px;
+    }
+
+    .icon-menu {
+      padding: 0 8px;
+    }
+
+    .number {
+      top: -12px;
+      right: 1px;
+    }
+
+    .mobile-menu {
+      display: block;
+    }
+
+    .mobile-item-menu {
+      padding: 7px 0;
+    }
+
+    .menu-header {
+      display: none;
+    }
+
+    .overlay {
+      display: flex;
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      right: 0;
+      background-color: #fff;
+      overflow-x: hidden;
+      transition: 0.5s;
+      justify-content: flex-start;
+    }
+
+    .overlay-content {
+      position: relative;
+      top: 0;
+      width: 70%;
+      text-align: left;
+      margin-top: 20px;
+      padding-left: 10px;
+    }
+
+    .overlay button {
+      padding: 8px;
+      display: block;
+      transition: 0.3s;
+      background-color: transparent;
+    }
+
+    .overlay .closebtn {
+      position: absolute;
+      font-size: 30px;
+      width: 20%;
+      top: -7px;
+      right: -6px;
+    }
+
+    .btn-menu-header {
+      background-color: transparent;
+      display: block;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+  }
+
+  @media (max-width: 768px) {
+    .row {
+      height: 50px !important;
+      padding: 13px 16px;
+    }
+
+    .logo {
+      width: 74.19px;
+      height: 23px;
+    }
+
+    .number {
+      display: none;
+    }
+
+    .btn-menu-header {
+      top: 16px;
+      right: 5px;
+    }
+  }

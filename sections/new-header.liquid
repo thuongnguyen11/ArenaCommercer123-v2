@@ -1,0 +1,157 @@
+{{ 'new-header.css' | asset_url | stylesheet_tag }}
+{% comment %}
+  <div class="row">
+    {% if section.settings['new-header123'] == 'left' %}
+      {% render 'new-logo.liquid' %}
+      {% render 'new-menu-header.liquid' %}
+      {% render 'new-icons-header.liquid' %}
+    {% endif %}
+    {% if section.settings['new-header123'] == 'center' %}
+      {% render 'new-menu-header.liquid' %}
+      {% render 'new-logo.liquid' %}
+      {% render 'new-icons-header.liquid' %}
+    {% endif %}
+  </div>
+{% endcomment %}
+
+<div class="row">
+  <div class="logo logo-{{section.settings.new-header123}}">
+    {% if section.settings['new-logo-header'] == blank %}
+      <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/logo.png?v=1681105446" class="icon-logo">
+    {% else %}
+      <img src="{{section.settings['new-logo-header'] | image_url }}" class="icon-logo">
+    {% endif %}
+  </div>
+  <ul class="menu-header menu-header-{{section.settings.new-header123}}" style="color: {{section.settings.color-menu}}">
+    {% for link in section.settings.menu.links %}
+      <li class="item-menu">
+        <a href="{{link.url  | default: '#'}}">{{ link.title }}</a>
+        {% if link.links != blank %}
+        <div class="dropdown-menu">
+          {% for item in link.links %}
+            <div>
+              <a href="{{item.url  | default: '#'}}" class="sub-menu">{{ item.title }}</a>
+            </div>
+          {% endfor %}
+        </div>
+        {%endif%}
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="mobile-icons-header mobile-icons-header-{{section.settings.new-header123}}">
+    <div class="icons-menu ">
+      <a href="#" class="icon-menu">
+        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/user-person-profile-account-contact_1.png?v=1680673442">
+      </a>
+      <a href="#" class="icon-menu">
+        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/Vector.png?v=1680673457">
+        <div class="number">0</div>
+      </a>
+      <a href="#" class="icon-menu">
+        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/shopping-cart-cart-shopping-commerce-ecommerce_1.png?v=1680673447">
+        <div class="number">6</div>
+      </a>
+    </div>
+    <div class="mobile-menu">
+      <div id="mobile-menu-header" class="overlay">
+        <ul class="overlay-content">
+          {% for link in section.settings.menu.links %}
+            <li class="mobile-item-menu">
+              {{ link.title | link_to: link.url }}
+            </li>
+          {% endfor %}
+        </ul>
+        <button class="closebtn" onclick="closeNav()">
+          <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/x.png?v=1681192681">
+        </button>
+      </div>
+      <button class="btn-menu-header" onclick="openNav()">
+        <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/Group_9.png?v=1681017676">
+      </button>
+    </div>
+  </div>
+</div>
+<style>
+  .item-menu:hover {
+    color: {{section.settings.hover-color-menu}};
+    text-decoration: underline;
+  }
+
+  .item-menu:hover a {
+    color: {{section.settings.hover-color-menu}};
+  }
+</style>
+<script>
+  function openNav() {
+    document.getElementById('mobile-menu-header').style.width = '288px';
+    document.getElementById('bg-homepage').style.display = 'block';
+  }
+
+  function closeNav() {
+    document.getElementById('mobile-menu-header').style.width = '0%';
+    document.getElementById('bg-homepage').style.display = 'none';
+  }
+</script>
+
+{% schema %}
+{
+  "name": "new-header",
+  "tag": "section",
+  "settings": [
+    {
+      "id": "new-header123",
+      "type": "select",
+      "label": "Desktop logo position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "id": "new-logo-header",
+      "type": "image_picker",
+      "label": "Change logo"
+    },
+    {
+      "type": "color",
+      "id": "color-menu",
+      "label": "Change color menu",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "hover-color-menu",
+      "label": "Change hover color menu",
+      "default": "#ff6e00"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Change menu"
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "header"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
