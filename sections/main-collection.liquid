@@ -1,75 +1,293 @@
 {{ 'main-collection.css' | asset_url | stylesheet_tag }}
+
+
 {% assign products = collection.products %}
 
+{% assign items_inline = section.settings.items_inline %}
+{% assign width_product = 100 | divided_by: items_inline %}
+{%- assign showingList = section.settings.total_viewlist | split: ',' -%}
+{%- assign total = cart.attributes.idCard | default: section.settings.items_per_page | times: 1 -%}
+{% if request.design_mode %}
+  {% assign items_per_page = section.settings.items_per_page %}
+{% else %}
+  {% assign items_per_page = total %}
+{% endif %}
+
+<style>
+  .products-container {
+
+    --width_product: {{width_product}}%;
+  }
+</style>
+
+{% render 'breadcrumbs' %}
 <div class="main-collection">
-  <div class="title-collection">{{ collection.title }}</div>
+  <div class="title-collection">
+    {{ collection.title }}
+    <sup class="all-products-count">({{ collection.all_products_count }})</sup>
+  </div>
+  {% comment %}
+    <div class="bg-collection-img">
+      <div class="collection-image"><img src="{{ collection.featured_image | image_url }}"></div>
+
+    </div>
+  {% endcomment %}
   <div class="description-collection">{{ collection.description }}</div>
-  <div class="collection-toolbar">
-    <div class="filter">
-      <div class="btn-filter">
+  <form class="collection-toolbar" action="{{ collection.url}}">
+    <div class="toolbar">
+      <div class="btn-filter" onclick="myFunction()">
         <img
           src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/filter_alt_FILL0_wght400_GRAD0_opsz48.svg?v=1682494010"
           class="filter-icon"
         >
         <span>Filter</span>
       </div>
-      <div class="dropdown-filter">
-        <div class="vailability">
-          <div>Availability</div>
-          <form>
-            <input type="checkbox" id="in_stock" name="in_stock" value="in-stock">
-            <label for="in_stock"> In stock</label><br>
-            <input type="checkbox" id="out_stock" name="out_stock" value="out-stock">
-            <label for="out_stock"> Out of stock</label><br>
-          </form>
+
+      <div class="toolbar-right">
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        <div>
+          <div class="product-sort-by">
+            <label for="sort-by">Sort by</label>
+            {% comment %} <select id="sort-by" class="sort-by selectpicker" name="sort_by" onchange="this.closest('form').submit();"> {% endcomment %}
+            <select id="sort-by" class="sort-by selectpicker" name="sort_by">
+              {%- for option in collection.sort_options %}
+                <option
+                  value="{{ option.value }}"
+                  {%- if option.value == sort_by %}
+                    selected="selected"
+                  {%- endif %}
+                >
+                  {{ option.name }}
+                </option>
+              {% endfor -%}
+            </select>
+            <br>
+          </div>
         </div>
 
-        <div class="price">
-          <div>By price</div>
+        <div class="items-per-page">
+          <label for="cars">Show</label>
+          <select id="number-item" name="number" class="number-product selectpicker" onchange="selector()">
+            {%- for i in showingList -%}
+              {%- assign view = i | strip | times: 1 -%}
+              <option
+                {% if view == total %}
+                  selected
+                {% endif -%}
+                value="{{view}}"
+              >
+                {{ view }}
+              </option>
+            {%- endfor -%}
+            {% if request.design_mode %}
+              <option value="{{items_per_page}}" selected style="display: none">
+                {{ items_per_page }}
+              </option>
+            {% endif %}
+          </select>
         </div>
       </div>
     </div>
 
-    {% comment %}  {% endcomment %}
+    <div class="dropdown-filters" id="dropdown-filter">
+      <div class="dropdown-filter">
+        {%- for filter in collection.filters -%}
+          <div class="filter">
+            <div class="filter-label">
+              <span>{{ filter.label }}</span>
+            </div>
 
-    {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-    <div>
-      <form>
-        <label for="sort-by">Sort by</label>
-        <select id="sort-by" class="sort-by" onchange="myFunction()">
-            {%- for option in collection.sort_options %}
-              <option
-                value="{{ option.value }}"
-                {%- if option.value == sort_by %}
-                  selected="selected"
-                {%- endif %}
-              >
-                {{ option.name }}
-              </option>
-            {% endfor -%}
-            </select>
-        <br>
-        <input type="submit" value="Submit">
-      </form>
-    </div>
-  </div>
+            <div class="filter-option">
+              {%- case filter.type -%}
+                {%- when 'boolean', 'list' -%}
+                  <div class="vailability">
+                    <ul>
+                      {%- for filter_value in filter.values -%}
+                        <li>
+                          <input
+                            class="checkbox"
+                            type="checkbox"
+                            name="{{ filter_value.param_name }}"
+                            value="{{ filter_value.value }}"
+                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                            {% if filter_value.active -%}
+                              checked
+                            {%- endif %}
+                            {% if filter_value.count == 0 and filter_value.active == false -%}
+                              disabled
+                            {%- endif %}
+                            {% comment %} onchange="this.closest('form').submit();" {% endcomment %}
+                          >
 
-  <div class="products">
-    {% comment %} {% assign sorted_results = products | sort: "title" %} {% endcomment %}
-    {% for product in products %}
-      <a class="product-item" href="{{product.url}}">
-        <div>
-          <img src="{{product.featured_media | image_url}}" class="product-image">
-          <div class="sale-tag"></div>
-          <div class="product-content">
-            <div class="product-name">{{ product.title }}</div>
-            <div class="product-price">{{ product.price | money }}</div>
+                          <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="label-checkbox">
+                            {{- filter_value.label -}}
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+
+                    {% comment %}
+                      <div class="filter-group-display__submit">
+                        <input type="submit" value="Apply">
+                      </div>
+                    {% endcomment %}
+                  </div>
+                {%- when 'price_range' -%}
+                  <div class="price">
+                    <div id="slider" class="noUiSlider"></div>
+                    <div class="price-input">
+                      <div>
+                        <label for="Filter-{{ filter.min_value.param_name }}" class="label-price">From</label>
+                        <input
+                          name="{{ filter.min_value.param_name }}"
+                          id="Filter-{{ filter.min_value.param_name }} "
+                          {% if filter.min_value.value -%}
+                            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                          {%- endif %}
+                          type="number"
+                          placeholder="0"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          class="min-price"
+                        >
+                        <span>{{ cart.currency.symbol }}</span>
+                      </div>
+
+                      <div>
+                        <label for="Filter-{{ filter.max_value.param_name }}" class="label-price">To</label>
+                        <input
+                          name="{{ filter.max_value.param_name }}"
+                          id="Filter-{{ filter.max_value.param_name }} "
+                          {% if filter.max_value.value -%}
+                            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                          {%- endif %}
+                          type="number"
+                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          min="0"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          class="max-price"
+                        >
+                        <span>{{ cart.currency.symbol }}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div  class="btn-submit-price" id="btn-submit-price">Apply</div>
+                    </div>
+                  </div>
+              {%- endcase -%}
+            </div>
           </div>
-        </div>
-      </a>
-    {% endfor %}
+        {%- endfor -%}
+      </div>
+    </div>
+  </form>
+
+  <div class="current-page" id="current-page">
+    {% paginate collection.products by items_per_page %}
+      <div class="products-container" id="AjaxinateContainer">
+        {% for product in collection.products %}
+          <a
+            class="product-item product w3-container w3-center w3-animate-zoom"
+            href="{{product.url}}"
+            id="product-{{ forloop.index | plus:paginate.current_offset }}"
+          >
+            <div>
+              <div class="card-image">
+                <div class="hover-image">
+                  <img src="{{product.featured_media | image_url}}" class="product-image">
+                </div>
+                <div class="btn-cart">{% render 'icon-cart' %}</div>
+              </div>
+              <div class="sale-tag">Sale</div>
+
+              <div class="product-content">
+                <div class="product-name">{{ product.title }}</div>
+                <div class="price">
+                  {% if product.available %}
+                    <div class="product-price">{{ product.price | money }}</div>
+                    <div class="compare-at-price">{{ product.compare_at_price | money }}</div>
+                  {% else %}
+                    <div class="sold-out">Sold out</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+        <div></div>
+      </div>
+
+      {% case section.settings.paginate_style %}
+        {% when 'page' %}
+          <div class="paginate">
+            {%- if paginate.pages > 1 -%}
+              <nav role="navigation">
+                <ol class="pagination">
+                  {%- if paginate.previous -%}
+                    <li>
+                      <a href="{{ paginate.previous.url }}">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                  {%- else -%}
+                    <li class="disabled">
+                      <span aria-hidden="true">&laquo;</span>
+                    </li>
+                  {%- endif -%}
+
+                  {%- for part in paginate.parts -%}
+                    {%- if part.is_link -%}
+                      <li class="num-of-page">
+                        <a href="{{ part.url }}"> <span class="visuallyhidden">page</span> {{ part.title }} </a>
+                      </li>
+                    {%- else -%}
+                      {%- if part.title == paginate.current_page -%}
+                        <li class="active" aria-current="page">
+                          <span class="visuallyhidden">page</span> {{ part.title }}
+                        </li>
+                      {%- else -%}
+                        <li><span class="visuallyhidden">page</span> {{ part.title }}</li>
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  {%- if paginate.next -%}
+                    <li>
+                      <a href="{{ paginate.next.url }}">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  {%- else -%}
+                    <li class="disabled">
+                      <span aria-hidden="true">&raquo;</span>
+                    </li>
+                  {%- endif -%}
+                </ol>
+              </nav>
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <div
+            id="product-list-foot"
+            data-url="{% if paginate.next %}{{paginate.next.url}}&section_id={{section.id}}{% endif %}"
+            data-section-id="{{section.id}}"
+          ></div>
+      {%- endcase -%}
+    {% endpaginate %}
   </div>
 </div>
+
+<style></style>
+
+<script>
+  function myFunction() {
+    document.getElementById('dropdown-filter').classList.toggle('show');
+  }
+
+  
+ 
+</script>
 
 {% schema %}
 {
@@ -77,13 +295,49 @@
   "tag": "section",
   "settings": [
     {
+      "type": "range",
+      "id": "items_inline",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Max number of item per row",
+      "default": 4
+    },
+    {
+      "type": "number",
+      "id": "items_per_page",
+      "label": "Total items per page",
+      "default": 5
+    },
+    {
+      "id": "paginate_style",
+      "type": "select",
+      "label": "Paginate style",
+      "options": [
+        {
+          "value": "page",
+          "label": "Pages"
+        },
+        {
+          "value": "infinite",
+          "label": "Infinite loading"
+        }
+      ],
+      "default": "page"
+    },
+    {
       "type": "text",
-      "id": "collectionsh",
-      "label": "Collection"
+      "id": "total_viewlist",
+      "label": "Total view list",
+      "default": "5, 10, 15, 20"
     }
   ]
 }
 {% endschema %}
 
+{{ 'infinite-loading.js' | asset_url | script_tag }}
+{{ 'render-collection.js' | asset_url | script_tag }}
+{{ 'range-price.js' | asset_url | script_tag }}
 
-{{ 'filter.js' | asset_url | script_tag }}
+

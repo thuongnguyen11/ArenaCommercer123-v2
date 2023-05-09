@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@shopify/theme-sections": "^4.0.2",
+    "ajaxinate": "^3.0.1",
     "countup.js": "^2.6.0",
     "lazysizes": "^5.3.0-beta1",
     "localforage": "^1.10.0",
