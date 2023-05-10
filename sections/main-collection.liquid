@@ -1,6 +1,5 @@
 {{ 'main-collection.css' | asset_url | stylesheet_tag }}
 
-
 {% assign products = collection.products %}
 
 {% assign items_inline = section.settings.items_inline %}
@@ -33,7 +32,12 @@
     </div>
   {% endcomment %}
   <div class="description-collection">{{ collection.description }}</div>
-  <form class="collection-toolbar" action="{{ collection.url}}">
+  <form
+    class="collection-toolbar"
+    id="collection-toolbar"
+    action="{{ collection.url}}"
+    onsubmit="event.preventDefault()"
+  >
     <div class="toolbar">
       <div class="btn-filter" onclick="myFunction()">
         <img
@@ -174,7 +178,7 @@
                     </div>
 
                     <div>
-                      <div  class="btn-submit-price" id="btn-submit-price">Apply</div>
+                      <div class="btn-submit-price" id="btn-submit-price">Apply</div>
                     </div>
                   </div>
               {%- endcase -%}
@@ -240,13 +244,13 @@
 
                   {%- for part in paginate.parts -%}
                     {%- if part.is_link -%}
-                      <li class="num-of-page" data-url={{part.title}}>
-                        <div class="paginate_url"> <span class="visuallyhidden">page</span> {{ part.title }} </div>
+                      <li class="num-of-page" data-url="{{part.title}}">
+                        <div class="paginate_url"><span class="visuallyhidden">page</span> {{ part.title }}</div>
                       </li>
                     {%- else -%}
                       {%- if part.title == paginate.current_page -%}
                         <li class="active" aria-current="page" data-current_page="{{ paginate.current_page }}">
-                          <span class="visuallyhidden" >page</span> {{ part.title }}
+                          <span class="visuallyhidden">page</span> {{ part.title }}
                         </li>
                       {%- else -%}
                         <li><span class="visuallyhidden">page</span> {{ part.title }}</li>
@@ -274,7 +278,13 @@
             id="product-list-foot"
             data-url="{% if paginate.next %}{{paginate.next.url}}&section_id={{section.id}}{% endif %}"
             data-section-id="{{section.id}}"
-          ></div>
+          >
+            <div class="load">
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+            </div>
+          </div>
       {%- endcase -%}
     {% endpaginate %}
   </div>
@@ -286,9 +296,6 @@
   function myFunction() {
     document.getElementById('dropdown-filter').classList.toggle('show');
   }
-
-  
- 
 </script>
 
 {% schema %}
@@ -341,5 +348,3 @@
 {{ 'infinite-loading.js' | asset_url | script_tag }}
 {{ 'render-collection.js' | asset_url | script_tag }}
 {{ 'range-price.js' | asset_url | script_tag }}
-
-

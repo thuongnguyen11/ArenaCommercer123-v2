@@ -1,4 +1,3 @@
-import InfiniteLoading from './infinite-loading';
 document.getElementById("sort-by").addEventListener("change", updateData);
 document.getElementById("btn-submit-price").addEventListener("click", updateData);
 document.querySelectorAll(".checkbox").forEach(checkbox => {
@@ -43,9 +42,7 @@ function updateData(current_page) {
   pushURL(dataSortBy, dataFilter, dataPrice, current_page);
   getURL();
 
-  const newItem = document.getElementById('product-list-foot');
 
-  InfiniteLoading(newItem);
 }
 
 function pushURL(dataSortBy, dataFilter, dataPrice, current_page) {
