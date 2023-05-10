@@ -1,0 +1,188 @@
+{{ 'main-collection.css' | asset_url | stylesheet_tag }}
+{% assign products = collection.products %}
+
+<div class="main-collection">
+  <div class="title-collection">{{ collection.title }}</div>
+  <div class="description-collection">{{ collection.description }}</div>
+  <div class="collection-toolbar">
+    <div class="filter">
+      <div class="btn-filter">
+        <img
+          src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/filter_alt_FILL0_wght400_GRAD0_opsz48.svg?v=1682494010"
+          class="filter-icon"
+        >
+        <span>Filter</span>
+      </div>
+      <div class="dropdown-filter">
+        <div class="vailability">
+          <div>Availability</div>
+          <form>
+            <input type="checkbox" id="in_stock" name="in_stock" value="in-stock">
+            <label for="in_stock"> In stock</label><br>
+            <input type="checkbox" id="out_stock" name="out_stock" value="out-stock">
+            <label for="out_stock"> Out of stock</label><br>
+          </form>
+        </div>
+
+        <div class="price">
+          <div>By price</div>
+          <form>
+            {%- for filter in collection.filters -%}
+                <summary>
+                   <div>
+                    <span>{{ filter.label }}</span>
+          
+                    {%- if filter.active_values.size > 0 -%}
+                      <span>({{ filter.active_values.size }})</span>
+                    {%- endif -%}
+                  </div>
+                </summary>
+          
+                <div>
+                  <div>
+                    <span>{{ filter.active_values.size }} selected</span>
+          
+                    {%- if filter.active_values.size > 0 -%}
+                      <a href="{{ filter.url_to_remove }}" class="filter-group-display__header-reset">Reset</a>
+                    {%- endif -%}
+                  </div> 
+          
+                  {%- case filter.type -%}
+                     {%- when 'boolean' or 'list' -%}
+                      <ul class="filter-group-display__list">
+                        {%- for filter_value in filter.values -%}
+                          <li class="filter-group-display__list-item">
+                            <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}">
+                            <input type="checkbox"
+                              name="{{ filter_value.param_name }}"
+                              value="{{ filter_value.value }}"
+                              id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                              {% if filter_value.active -%}checked{%- endif %}
+                              {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                            >{{ filter_value.label }}</label>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+          
+                      <div class="filter-group-display__submit">
+                        <input type="submit" value="Apply">
+                      </div> 
+                    {%- when 'price_range' -%}
+                      <div>
+                        <div>
+                          <span>{{ cart.currency.symbol }}</span>
+                          <input name="{{ filter.min_value.param_name }}"
+                            id="Filter-{{ filter.min_value.param_name }}"
+                            {% if filter.min_value.value -%}
+                              value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                            {%- endif %}
+                            type="number"
+                            placeholder="0"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          >
+                          <label for="Filter-{{ filter.min_value.param_name }}">From</label>
+                        </div>
+
+                        <div class="filter-group-display__price-range-to">
+                          <span>{{ cart.currency.symbol }}</span>
+                          <input name="{{ filter.max_value.param_name }}"
+                            id="Filter-{{ filter.max_value.param_name }}"
+                            {% if filter.max_value.value -%}
+                              value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                            {%- endif %}
+                            type="number"
+                            placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          >
+                          <label for="Filter-{{ filter.max_value.param_name }}">To</label>
+                        </div>
+
+                      </div>
+          
+                      <div class="filter-group-display__submit">
+                        <input type="submit" value="Apply">
+                      </div>
+                  {%- endcase -%}
+                </div>
+              {% comment %} </details> {% endcomment %}
+            {%- endfor -%}
+          </form>
+          
+          
+        </div>
+      </div>
+    </div>
+
+    {% comment %}  {% endcomment %}
+
+    {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+    <div>
+      <form action="{{ collection.url}}">
+        <label for="sort-by">Sort by</label>
+        <select id="sort-by" class="sort-by" name="sort_by" onchange="this.closest('form').submit();">
+          {%- for option in collection.sort_options %}
+            <option
+              value="{{ option.value }}"
+              {%- if option.value == sort_by %}
+                selected="selected"
+              {%- endif %}
+            >
+              {{ option.name }}
+            </option>
+          {% endfor -%}
+        </select>
+        <br>
+      </form>
+    </div>
+  </div>
+
+  <div class="products">
+    {% comment %}
+      {% for filter in collection.filters %}
+        {%- if filter.type == 'price_range' -%}
+          {%- if filter.min_value.value or filter.max_value.value -%}
+            <a class="active-filters__remove-filter" href="{{ filter.url_to_remove }}">
+              {%- assign min_value = filter.min_value.value | default: 0 -%}
+              {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+              {{ min_value | money }} - {{ max_value | money }} X
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      {% endfor %}
+    {% endcomment %}
+
+    
+    {% for product in collection.products %}
+      {% if product.available == false %}
+        <a class="product-item" href="{{product.url}}">
+          <div>
+            <img src="{{product.featured_media | image_url}}" class="product-image">
+            <div class="sale-tag"></div>
+            <div class="product-content">
+              <div class="product-name">{{ product.title }}</div>
+              <div class="product-price">{{ product.price | money }}</div>
+            </div>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "collectionsh",
+      "label": "Collection"
+    }
+  ]
+}
+{% endschema %}
+
+{{ 'filter.js' | asset_url | script_tag }}

@@ -1,5 +1,5 @@
-  .row {
-    padding: 0 30px;
+  .row123 {
+    /* padding: 0 30px; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -166,7 +166,7 @@
   }
 
   @media (max-width: 1024px) {
-    .row {
+    .row123 {
       height: 60px !important;
       padding: 15px 40px;
     }
@@ -251,7 +251,7 @@
   }
 
   @media (max-width: 768px) {
-    .row {
+    .row123 {
       height: 50px !important;
       padding: 13px 16px;
     }
