@@ -7,11 +7,11 @@ $(document).ready(function () {
     var slider = document.getElementById('slider');
 
     noUiSlider.create(slider, {
-        start: [100, 400],
+        start: [Number(minPrice.min), Number(maxPrice.max)],
         connect: true,
         // tooltips: true,
         range: {
-            'min': Number(minPrice.value),
+            'min': Number(minPrice.min),
             'max': Number(maxPrice.max)
         }
         

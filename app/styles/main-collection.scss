@@ -275,10 +275,23 @@
                                 border-radius: 2px;
                                 .noUi-connect {
                                     background: #FF6E00;
+                                }
+                                .noUi-origin {
                                     .noUi-handle {
                                         width: 25px;
                                         height: 25px;
                                         top: -8px;
+                                        background: #FF6E00;
+                                    }
+                                    .noUi-handle:before {
+                                        left: 10px;
+                                        top: 4px;
+                                        background-color: #fff;
+                                    }
+                                    .noUi-handle:after {
+                                        left: 14px;
+                                        top: 4px;
+                                        background-color: #fff;
                                     }
                                 }
                             }
@@ -362,7 +375,7 @@
                     .btn-cart {
                         position: absolute;
                         bottom: 0;
-                        left: 10px;
+                        left: 0px;
                         background-color: #fff;
                         border-radius: 6px;
                         padding: 5px 10px;

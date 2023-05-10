@@ -1,11 +1,55 @@
 (() => {
+  // app/scripts/infinite-loading.js
+  function InfiniteLoading() {
+    console.log("vao r1");
+    async function GetApi3(url, InfinitePoint) {
+      const response = await fetch(url);
+      const html = await response.text();
+      insertData(html, InfinitePoint);
+      console.log("chay di");
+    }
+    function insertData(data, InfinitePoint) {
+      const div = document.createElement("div");
+      div.innerHTML = data;
+      const new_url = div.querySelector("#product-list-foot").dataset.url;
+      console.log(new_url);
+      InfinitePoint.setAttribute("data-url", new_url);
+      const products = div.querySelectorAll("#AjaxinateContainer > * ");
+      products.forEach((item) => {
+        document.getElementById("AjaxinateContainer").appendChild(item);
+      });
+    }
+    const newItem = document.getElementById("product-list-foot");
+    const observer = new IntersectionObserver((entries) => {
+      console.log("chay dum cai di");
+      console.log(entries);
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          console.log("huhu");
+          GetApi3(entry.target.dataset.url, newItem);
+        }
+      });
+    });
+    observer.observe(newItem);
+  }
+  InfiniteLoading();
+
   // app/scripts/render-collection.js
   document.getElementById("sort-by").addEventListener("change", updateData);
   document.getElementById("btn-submit-price").addEventListener("click", updateData);
   document.querySelectorAll(".checkbox").forEach((checkbox) => {
     checkbox.addEventListener("change", updateData);
   });
-  function updateData() {
+  function getCurrentPage() {
+    document.querySelectorAll(".num-of-page").forEach((current_page) => {
+      current_page.addEventListener("click", () => {
+        updateData(current_page.dataset.url);
+      });
+    });
+  }
+  getCurrentPage();
+  var dataPrice = "";
+  function updateData(current_page) {
     const dataSortBy = document.getElementById("sort-by").value;
     var markedCheckbox = document.getElementsByClassName("checkbox");
     const filterChecked = [];
@@ -15,20 +59,24 @@
       }
     }
     const dataFilter = filterChecked.join("");
-    const minPrice = document.querySelectorAll(".min-price")[0];
-    const maxPrice = document.querySelectorAll(".max-price")[0];
-    const minValue = `&${minPrice.name}=${minPrice.value ? minPrice.value : minPrice.min}`;
-    const maxValue = `&${maxPrice.name}=${maxPrice.value ? maxPrice.value : maxPrice.max}`;
-    const dataPrice = `${minValue + maxValue}`;
-    pushURL(dataSortBy, dataFilter, dataPrice);
+    dataPrice = "";
+    const minPrice = document.querySelector(".min-price");
+    const maxPrice = document.querySelector(".max-price");
+    const minValue = `&${minPrice.name}=${minPrice.value}`;
+    const maxValue = `&${maxPrice.name}=${maxPrice.value}`;
+    dataPrice = `${minValue + maxValue}`;
+    pushURL(dataSortBy, dataFilter, dataPrice, current_page);
     getURL();
+    const newItem = document.getElementById("product-list-foot");
+    InfiniteLoading(newItem);
   }
-  function pushURL(dataSortBy, dataFilter, dataPrice) {
-    history.pushState("", "", `?sort_by=${dataSortBy + dataFilter + dataPrice}`);
+  function pushURL(dataSortBy, dataFilter, dataPrice2, current_page) {
+    isExist = typeof current_page == "object";
+    current_page = isExist ? "" : `&page=${current_page}`;
+    history.pushState("", "", `?sort_by=${dataSortBy + dataFilter + dataPrice2 + current_page}`);
   }
   async function getURL() {
     const response = await fetch(location.href);
-    console.log(response);
     const products = await response.text();
     inserProducts(products);
   }
@@ -40,6 +88,7 @@
     products.forEach((item) => {
       document.getElementById("current-page").appendChild(item);
     });
+    getCurrentPage();
   }
   function selector() {
     jQuery.post(window.Shopify.routes.root + "cart/update.js", {
@@ -51,4 +100,5 @@
     });
   }
   window.selector = selector;
+  window.updateData = updateData;
 })();

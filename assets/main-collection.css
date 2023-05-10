@@ -262,10 +262,23 @@
   background: #ff6e00;
 }
 
-.main-collection .collection-toolbar .dropdown-filters .dropdown-filter .filter .filter-option .price .noUiSlider .noUi-connect .noUi-handle {
+.main-collection .collection-toolbar .dropdown-filters .dropdown-filter .filter .filter-option .price .noUiSlider .noUi-origin .noUi-handle {
   width: 25px;
   height: 25px;
   top: -8px;
+  background: #ff6e00;
+}
+
+.main-collection .collection-toolbar .dropdown-filters .dropdown-filter .filter .filter-option .price .noUiSlider .noUi-origin .noUi-handle:before {
+  left: 10px;
+  top: 4px;
+  background-color: #fff;
+}
+
+.main-collection .collection-toolbar .dropdown-filters .dropdown-filter .filter .filter-option .price .noUiSlider .noUi-origin .noUi-handle:after {
+  left: 14px;
+  top: 4px;
+  background-color: #fff;
 }
 
 .main-collection .collection-toolbar .dropdown-filters .dropdown-filter .filter .filter-option .price .price-input {
@@ -343,7 +356,7 @@
 .main-collection .current-page .products-container .product-item .card-image .btn-cart {
   position: absolute;
   bottom: 0;
-  left: 10px;
+  left: 0;
   background-color: #fff;
   border-radius: 6px;
   padding: 5px 10px;

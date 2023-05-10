@@ -1,43 +1,36 @@
 (() => {
   // app/scripts/infinite-loading.js
   var newItem = document.getElementById("product-list-foot");
-  if (newItem) {
-    const service = function(target) {
-      var url = target.dataset.url;
-      async function getApi() {
-        const response = await fetch(url);
-        const html = await response.text();
-        return html;
-      }
-      function insertData(data) {
-        const div = document.createElement("div");
-        div.innerHTML = data;
-        const new_url = div.querySelector("#product-list-foot").dataset.url;
-        console.log(new_url);
-        target.setAttribute("data-url", new_url);
-        const products = div.querySelectorAll("#AjaxinateContainer > * ");
-        console.log(products);
-        products.forEach((item) => {
-          document.getElementById("AjaxinateContainer").appendChild(item);
-        });
-      }
-      const services = {
-        getApi,
-        insertData
-      };
-      return services;
-    };
+  function InfiniteLoading(newItem2) {
+    console.log("vao r1");
+    async function GetApi3(url, InfinitePoint) {
+      const response = await fetch(url);
+      const html = await response.text();
+      insertData(html, InfinitePoint);
+      console.log("chay di");
+    }
+    function insertData(data, InfinitePoint) {
+      const div = document.createElement("div");
+      div.innerHTML = data;
+      const new_url = div.querySelector("#product-list-foot").dataset.url;
+      console.log(new_url);
+      InfinitePoint.setAttribute("data-url", new_url);
+      const products = div.querySelectorAll("#AjaxinateContainer > * ");
+      products.forEach((item) => {
+        document.getElementById("AjaxinateContainer").appendChild(item);
+      });
+    }
     const observer = new IntersectionObserver((entries) => {
+      console.log("chay dum cai di");
+      console.log(entries);
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const { getApi, insertData } = service(entry.target);
-          getApi().then((data) => {
-            insertData(data);
-          }).finally(() => {
-          });
+          console.log("huhu");
+          GetApi3(entry.target.dataset.url, newItem2);
         }
       });
     });
-    observer.observe(newItem);
+    observer.observe(newItem2);
   }
+  InfiniteLoading(newItem);
 })();

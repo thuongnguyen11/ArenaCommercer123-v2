@@ -144,6 +144,7 @@
                           {% if filter.min_value.value -%}
                             value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
                           {%- endif %}
+                          value="0"
                           type="number"
                           placeholder="0"
                           min="0"
@@ -163,6 +164,7 @@
                           {%- endif %}
                           type="number"
                           placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                           min="0"
                           max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                           class="max-price"
@@ -220,7 +222,7 @@
 
       {% case section.settings.paginate_style %}
         {% when 'page' %}
-          <div class="paginate">
+          <div class="paginate" id="paginate">
             {%- if paginate.pages > 1 -%}
               <nav role="navigation">
                 <ol class="pagination">
@@ -238,13 +240,13 @@
 
                   {%- for part in paginate.parts -%}
                     {%- if part.is_link -%}
-                      <li class="num-of-page">
-                        <a href="{{ part.url }}"> <span class="visuallyhidden">page</span> {{ part.title }} </a>
+                      <li class="num-of-page" data-url={{part.title}}>
+                        <div class="paginate_url"> <span class="visuallyhidden">page</span> {{ part.title }} </div>
                       </li>
                     {%- else -%}
                       {%- if part.title == paginate.current_page -%}
-                        <li class="active" aria-current="page">
-                          <span class="visuallyhidden">page</span> {{ part.title }}
+                        <li class="active" aria-current="page" data-current_page="{{ paginate.current_page }}">
+                          <span class="visuallyhidden" >page</span> {{ part.title }}
                         </li>
                       {%- else -%}
                         <li><span class="visuallyhidden">page</span> {{ part.title }}</li>
