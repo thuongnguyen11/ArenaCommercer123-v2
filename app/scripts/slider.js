@@ -4,6 +4,7 @@ document.addEventListener("shopify:section:load", () => {
 });
 
 
+
 function slider() {
 
   Object.values(document.getElementsByClassName("owl-carousel")).forEach(slide => 

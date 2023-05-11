@@ -1,4 +1,4 @@
-
+// import { countAllProducts } from "./render-collection";
 // async function getApi() {
 //     const response = await fetch(location.href);
 //     const newURL = await response.text();
@@ -6,6 +6,8 @@
 //   }
 
 // function InfiniteAbc() {
+// const countAllProduct= countAllProducts();
+// countAllProducts();
 
 async function GetApi(url, InfinitePoint) {
     const response = await fetch(url);
@@ -18,45 +20,53 @@ function insertData(data, InfinitePoint) {
     div.innerHTML = data;
     const new_url = div.querySelector("#product-list-foot").dataset.url;
     console.log(new_url);
-    if(new_url==''){
-        InfinitePoint.innerHTML='';
-    } else {
-        InfinitePoint.setAttribute("data-url", new_url);
-        const products = div.querySelectorAll('#AjaxinateContainer > * ');
-        products.forEach(item => {
-            document.getElementById('AjaxinateContainer').appendChild(item);
-        })
-    }
     
+    InfinitePoint.setAttribute("data-url", new_url);
+    const products = div.querySelectorAll("#AjaxinateContainer > * ");
+    products.forEach((item) => {
+        document.getElementById("AjaxinateContainer").appendChild(item);
+    });
+
+    const showingItem = div.querySelectorAll("#none > * ");
+    document.getElementById("none").innerHTML = "";
+    showingItem.forEach((item) => {
+        document.getElementById("none").appendChild(item);
+    });
+
+    if (new_url == "") {
+        document.getElementById("delete-load").innerHTML = "";
+        return;
+    }
+
 }
 
 function Observer() {
-    const newItem = document.getElementById('product-list-foot');
+    const newItem = document.getElementById("product-list-foot");
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                console.log(entry.isIntersecting);
                 GetApi(entry.target.dataset.url, newItem);
             }
-        })
-    })
+        });
+    });
     observer.observe(newItem);
-
 }
 
 Observer();
 
-
 function Srcoll() {
-    window.addEventListener("scroll", () => {
-        Observer()
-    }, { once: true })
+    window.addEventListener(
+        "scroll",
+        () => {
+            Observer();
+        },
+        { once: true }
+    );
 }
 
-document.getElementById('collection-toolbar').addEventListener('change', () => {
+document.getElementById("collection-toolbar").addEventListener("change", () => {
     Srcoll();
-})
-
+});
 
 // }
 // if (!newItem.dataset.url) {
@@ -64,12 +74,6 @@ document.getElementById('collection-toolbar').addEventListener('change', () => {
 // }
 // }
 
-
 // };
 
 // export default InfiniteAbc;
-
-
-
-
-

@@ -1,5 +1,6 @@
 (() => {
   // app/scripts/render-collection.js
+  console.log(document.getElementById("sort-by"));
   document.getElementById("sort-by").addEventListener("change", updateData);
   document.getElementById("btn-submit-price").addEventListener("click", updateData);
   document.querySelectorAll(".checkbox").forEach((checkbox) => {
@@ -34,8 +35,8 @@
     getURL();
   }
   function pushURL(dataSortBy, dataFilter, dataPrice2, current_page) {
-    isExist = typeof current_page == "object";
-    current_page = isExist ? "" : `&page=${current_page}`;
+    isExist = typeof current_page == "string";
+    current_page = isExist ? `&page=${current_page}` : "";
     history.pushState("", "", `?sort_by=${dataSortBy + dataFilter + dataPrice2 + current_page}`);
   }
   async function getURL() {
@@ -50,6 +51,11 @@
     document.getElementById("current-page").innerHTML = "";
     products.forEach((item) => {
       document.getElementById("current-page").appendChild(item);
+    });
+    const showingItem = div.querySelectorAll("#none > * ");
+    document.getElementById("none").innerHTML = "";
+    showingItem.forEach((item) => {
+      document.getElementById("none").appendChild(item);
     });
     getCurrentPage();
   }
