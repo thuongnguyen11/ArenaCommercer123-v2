@@ -18,3 +18,4 @@ document.addEventListener("shopify:section:load", () => {
   
 window.onCountUp = onCountUp;
 
+  

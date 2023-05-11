@@ -57,7 +57,12 @@
   padding-bottom: 10px;
 }
 
-.main-collection .collection-toolbar .toolbar .btn-filter {
+.main-collection .collection-toolbar .toolbar .toolbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.main-collection .collection-toolbar .toolbar .toolbar-left .btn-filter {
   width: 90px;
   display: flex;
   justify-content: space-between;
@@ -68,17 +73,22 @@
   cursor: pointer;
   background-color: #fff;
   transition: .25s;
+  margin-right: 30px;
 }
 
-.main-collection .collection-toolbar .toolbar .btn-filter .filter-icon {
+.main-collection .collection-toolbar .toolbar .toolbar-left .btn-filter .filter-icon {
   width: 25px;
   height: 25px;
 }
 
-.main-collection .collection-toolbar .toolbar .btn-filter:focus, .main-collection .collection-toolbar .toolbar .btn-filter:hover {
+.main-collection .collection-toolbar .toolbar .toolbar-left .btn-filter:focus, .main-collection .collection-toolbar .toolbar .toolbar-left .btn-filter:hover {
   box-shadow: 0 .5em .5em -.4em #ff6e00;
   transform: translateY(-0.25em);
   border-color: #ff6e00;
+}
+
+.main-collection .collection-toolbar .toolbar .toolbar-left .show-products-in-page .outstanding {
+  font-weight: 900;
 }
 
 .main-collection .collection-toolbar .toolbar .toolbar-right {

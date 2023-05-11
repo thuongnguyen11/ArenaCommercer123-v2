@@ -61,32 +61,43 @@
             border-bottom: 1px solid #d2d1d1;
             align-items: center;
             padding-bottom: 10px;
-
-            .btn-filter {
-                width: 90px;
+            .toolbar-left {
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
-                border: 1px solid #d2d1d1;
-                border-radius: 7px;
-                padding: 5px 10px;
-                cursor: pointer;
-                background-color: #fff;
-                transition: 0.25s;
-
-                .filter-icon {
-                    width: 25px;
-                    height: 25px;
+                .btn-filter {
+                    width: 90px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border: 1px solid #d2d1d1;
+                    border-radius: 7px;
+                    padding: 5px 10px;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: 0.25s;
+                    margin-right: 30px;
+    
+                    .filter-icon {
+                        width: 25px;
+                        height: 25px;
+                    }
                 }
+    
+                .btn-filter:hover,
+                .btn-filter:focus {
+                    box-shadow: 0 0.5em 0.5em -0.4em #FF6E00;
+                    transform: translateY(-0.25em);
+                    border-color: #FF6E00;
+                }  
+                
+                .show-products-in-page {
+                    .outstanding {
+                        font-weight: 900;
+                    }
+                }
+    
             }
-
-            .btn-filter:hover,
-            .btn-filter:focus {
-                box-shadow: 0 0.5em 0.5em -0.4em #FF6E00;
-                transform: translateY(-0.25em);
-                border-color: #FF6E00;
-            }
-
+            
             .toolbar-right {
                 display: flex;
                 gap: 20px;
@@ -229,9 +240,7 @@
                 }
             }
 
-
         }
-
 
         .dropdown-filters {
             display: block;

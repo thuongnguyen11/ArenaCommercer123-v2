@@ -15,6 +15,7 @@ $(document).ready(function () {
             'max': Number(maxPrice.max)
         }
         
+        
     });
 
     slider.noUiSlider.on('update', function (values) {

@@ -20,185 +20,205 @@
 </style>
 
 {% render 'breadcrumbs' %}
-<div class="main-collection">
-  <div class="title-collection">
-    {{ collection.title }}
-    <sup class="all-products-count">({{ collection.all_products_count }})</sup>
-  </div>
-  {% comment %}
-    <div class="bg-collection-img">
-      <div class="collection-image"><img src="{{ collection.featured_image | image_url }}"></div>
-
+{% paginate collection.products by items_per_page %}
+  <div class="main-collection" id="main-collection">
+    <div class="title-collection">
+      {{ collection.title }}
+      <sup class="all-products-count">({{ collection.all_products_count }})</sup>
     </div>
-  {% endcomment %}
-  <svg width="353" height="353" viewBox="0 0 353 353" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="353" height="353" fill="white"/>
-    <circle cx="95" cy="91" r="50" fill="#D9D9D9"/>
-    <circle cx="243" cy="91" r="50" fill="#D9D9D9"/>
-    <path d="M145 255C145 282.614 122.614 305 95 305C67.3858 305 45 282.614 45 255C45 227.386 67.3858 205 95 205C122.614 205 145 227.386 145 255Z" fill="#D9D9D9"/>
-    <circle cx="243" cy="255" r="50" fill="#D9D9D9"/>
-    </svg>
-  <div class="description-collection">{{ collection.description }}</div>
-  <form
-    class="collection-toolbar"
-    id="collection-toolbar"
-    action="{{ collection.url}}"
-    onsubmit="event.preventDefault()"
-  >
-    <div class="toolbar">
-      <div class="btn-filter" onclick="myFunction()">
-        <img
-          src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/filter_alt_FILL0_wght400_GRAD0_opsz48.svg?v=1682494010"
-          class="filter-icon"
-        >
-        <span>Filter</span>
-      </div>
+    {% comment %}
+      <div class="bg-collection-img">
+        <div class="collection-image"><img src="{{ collection.featured_image | image_url }}"></div>
 
-      <div class="toolbar-right">
-        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-        <div>
-          <div class="product-sort-by">
-            <label for="sort-by">Sort by</label>
-            {% comment %} <select id="sort-by" class="sort-by selectpicker" name="sort_by" onchange="this.closest('form').submit();"> {% endcomment %}
-            <select id="sort-by" class="sort-by selectpicker" name="sort_by">
-              {%- for option in collection.sort_options %}
+      </div>
+    {% endcomment %}
+    <div class="description-collection">{{ collection.description }}</div>
+    <form
+      class="collection-toolbar"
+      id="collection-toolbar"
+      action="{{ collection.url}}"
+      onsubmit="event.preventDefault()"
+    >
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <div class="btn-filter" onclick="myFunction()">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/filter_alt_FILL0_wght400_GRAD0_opsz48.svg?v=1682494010"
+              class="filter-icon"
+            >
+            <span>Filter</span>
+          </div>
+          {% assign lastItem = paginate.items %}
+          {% assign startItem = paginate.current_offset | plus: 1 %}
+          {% assign endItem = paginate.current_offset | plus: items_per_page %}
+          <div id="none">
+            <span>
+              Showing
+              {% if lastItem == startItem %}
+                {{ lastItem }}
+              {% elsif endItem < lastItem %}
+                {{ startItem }}-{{ endItem }}
+              {% elsif endItem > lastItem %}
+                {{ startItem }}-{{ lastItem }}
+              {% endif %}
+              of
+              {{ paginate.items }}
+              result
+            </span>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+          <div>
+            <div class="product-sort-by">
+              <label for="sort-by">Sort by</label>
+              {% comment %} <select id="sort-by" class="sort-by selectpicker" name="sort_by" onchange="this.closest('form').submit();"> {% endcomment %}
+              <select id="sort-by" class="sort-by selectpicker" name="sort_by">
+                {%- for option in collection.sort_options %}
+                  <option
+                    value="{{ option.value }}"
+                    {%- if option.value == sort_by %}
+                      selected="selected"
+                    {%- endif %}
+                  >
+                    {{ option.name }}
+                  </option>
+                {% endfor -%}
+              </select>
+              <br>
+            </div>
+          </div>
+
+          <div class="items-per-page">
+            <label for="cars">Show</label>
+            <select id="number-item" name="number" class="number-product selectpicker" onchange="selector()">
+              {%- for i in showingList -%}
+                {%- assign view = i | strip | times: 1 -%}
                 <option
-                  value="{{ option.value }}"
-                  {%- if option.value == sort_by %}
-                    selected="selected"
-                  {%- endif %}
+                  {% if view == total %}
+                    selected
+                  {% endif -%}
+                  value="{{view}}"
                 >
-                  {{ option.name }}
+                  {{ view }}
                 </option>
-              {% endfor -%}
+              {%- endfor -%}
+              {% if request.design_mode %}
+                <option value="{{items_per_page}}" selected style="display: none">
+                  {{ items_per_page }}
+                </option>
+              {% endif %}
             </select>
-            <br>
           </div>
         </div>
-
-        <div class="items-per-page">
-          <label for="cars">Show</label>
-          <select id="number-item" name="number" class="number-product selectpicker" onchange="selector()">
-            {%- for i in showingList -%}
-              {%- assign view = i | strip | times: 1 -%}
-              <option
-                {% if view == total %}
-                  selected
-                {% endif -%}
-                value="{{view}}"
-              >
-                {{ view }}
-              </option>
-            {%- endfor -%}
-            {% if request.design_mode %}
-              <option value="{{items_per_page}}" selected style="display: none">
-                {{ items_per_page }}
-              </option>
-            {% endif %}
-          </select>
-        </div>
       </div>
-    </div>
 
-    <div class="dropdown-filters" id="dropdown-filter">
-      <div class="dropdown-filter">
-        {%- for filter in collection.filters -%}
-          <div class="filter">
-            <div class="filter-label">
-              <span>{{ filter.label }}</span>
-            </div>
+      <div class="dropdown-filters" id="dropdown-filter">
+        <div class="dropdown-filter">
+          {%- for filter in collection.filters -%}
+            <div class="filter">
+              <div class="filter-label">
+                <span>{{ filter.label }}</span>
+              </div>
 
-            <div class="filter-option">
-              {%- case filter.type -%}
-                {%- when 'boolean', 'list' -%}
-                  <div class="vailability">
-                    <ul>
-                      {%- for filter_value in filter.values -%}
-                        <li>
+              <div class="filter-option">
+                {%- case filter.type -%}
+                  {%- when 'boolean', 'list' -%}
+                    <div class="vailability">
+                      <ul>
+                        {%- for filter_value in filter.values -%}
+                          <li>
+                            <input
+                              class="checkbox"
+                              type="checkbox"
+                              name="{{ filter_value.param_name }}"
+                              value="{{ filter_value.value }}"
+                              id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                              {% if filter_value.active -%}
+                                checked
+                              {%- endif %}
+                              {% if filter_value.count == 0 and filter_value.active == false -%}
+                                disabled
+                              {%- endif %}
+                              {% comment %} onchange="this.closest('form').submit();" {% endcomment %}
+                            >
+
+                            <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="label-checkbox">
+                              {{- filter_value.label -}}
+                            </label>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+
+                      {% comment %}
+                        <div class="filter-group-display__submit">
+                          <input type="submit" value="Apply">
+                        </div>
+                      {% endcomment %}
+                    </div>
+                  {%- when 'price_range' -%}
+                    <div class="price">
+                      <div id="slider" class="noUiSlider"></div>
+                      <div class="price-input">
+                        <div>
+                          <label for="Filter-{{ filter.min_value.param_name }}" class="label-price">From</label>
                           <input
-                            class="checkbox"
-                            type="checkbox"
-                            name="{{ filter_value.param_name }}"
-                            value="{{ filter_value.value }}"
-                            id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
-                            {% if filter_value.active -%}
-                              checked
+                            name="{{ filter.min_value.param_name }}"
+                            id="Filter-{{ filter.min_value.param_name }} "
+                            {% if filter.min_value.value -%}
+                              value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
                             {%- endif %}
-                            {% if filter_value.count == 0 and filter_value.active == false -%}
-                              disabled
-                            {%- endif %}
-                            {% comment %} onchange="this.closest('form').submit();" {% endcomment %}
+                            value="0"
+                            type="number"
+                            placeholder="0"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                            class="min-price"
                           >
+                          <span>{{ cart.currency.symbol }}</span>
+                        </div>
 
-                          <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="label-checkbox">
-                            {{- filter_value.label -}}
-                          </label>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-
-                    {% comment %}
-                      <div class="filter-group-display__submit">
-                        <input type="submit" value="Apply">
-                      </div>
-                    {% endcomment %}
-                  </div>
-                {%- when 'price_range' -%}
-                  <div class="price">
-                    <div id="slider" class="noUiSlider"></div>
-                    <div class="price-input">
-                      <div>
-                        <label for="Filter-{{ filter.min_value.param_name }}" class="label-price">From</label>
-                        <input
-                          name="{{ filter.min_value.param_name }}"
-                          id="Filter-{{ filter.min_value.param_name }} "
-                          {% if filter.min_value.value -%}
-                            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
-                          {%- endif %}
-                          value="0"
-                          type="number"
-                          placeholder="0"
-                          min="0"
-                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                          class="min-price"
-                        >
-                        <span>{{ cart.currency.symbol }}</span>
+                        <div>
+                          <label for="Filter-{{ filter.max_value.param_name }}" class="label-price">To</label>
+                          <input
+                            name="{{ filter.max_value.param_name }}"
+                            id="Filter-{{ filter.max_value.param_name }} "
+                            {% if filter.max_value.value -%}
+                              value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                            {%- endif %}
+                            type="number"
+                            placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                            value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                            min="0"
+                            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                            class="max-price"
+                          >
+                          <span>{{ cart.currency.symbol }}</span>
+                        </div>
                       </div>
 
                       <div>
-                        <label for="Filter-{{ filter.max_value.param_name }}" class="label-price">To</label>
-                        <input
-                          name="{{ filter.max_value.param_name }}"
-                          id="Filter-{{ filter.max_value.param_name }} "
-                          {% if filter.max_value.value -%}
-                            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
-                          {%- endif %}
-                          type="number"
-                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                          value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                          min="0"
-                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                          class="max-price"
-                        >
-                        <span>{{ cart.currency.symbol }}</span>
+                        <div class="btn-submit-price" id="btn-submit-price">Apply</div>
                       </div>
                     </div>
-
-                    <div>
-                      <div class="btn-submit-price" id="btn-submit-price">Apply</div>
-                    </div>
-                  </div>
-              {%- endcase -%}
+                {%- endcase -%}
+              </div>
             </div>
-          </div>
-        {%- endfor -%}
+          {%- endfor -%}
+        </div>
       </div>
-    </div>
-  </form>
+    </form>
 
-  <div class="current-page" id="current-page">
-    {% paginate collection.products by items_per_page %}
-      <div class="products-container" id="AjaxinateContainer">
+    <div class="current-page" id="current-page">
+      <div
+        class="products-container"
+        id="AjaxinateContainer"
+        data-items_per_page="{{items_per_page}}"
+        data-items="{{paginate.items}}"
+        data-current_offset="{{paginate.current_offset}}"
+        data-pages="{{paginate.pages}}"
+      >
         {% for product in collection.products %}
           <a
             class="product-item product w3-container w3-center w3-animate-zoom"
@@ -228,20 +248,20 @@
             </div>
           </a>
         {% endfor %}
-        <div></div>
+        {% comment %} <div></div> {% endcomment %}
       </div>
 
       {% case section.settings.paginate_style %}
         {% when 'page' %}
-          <div class="paginate" id="paginate">
+          <div class="paginate" id="paginate" data-pages="{{paginate.pages}}" >
             {%- if paginate.pages > 1 -%}
               <nav role="navigation">
                 <ol class="pagination">
                   {%- if paginate.previous -%}
-                    <li>
-                      <a href="{{ paginate.previous.url }}">
+                    <li class="num-of-page" data-url="{{ paginate.previous.url }}" data-current_offset="{{ paginate.current_offset}}">
+                      <div>
                         <span aria-hidden="true">&laquo;</span>
-                      </a>
+                      </div>
                     </li>
                   {%- else -%}
                     <li class="disabled">
@@ -251,7 +271,7 @@
 
                   {%- for part in paginate.parts -%}
                     {%- if part.is_link -%}
-                      <li class="num-of-page" data-url="{{part.title}}">
+                      <li class="num-of-page" data-url="{{part.title}}" data-current_offset="{{ paginate.current_offset}}">
                         <div class="paginate_url"><span class="visuallyhidden">page</span> {{ part.title }}</div>
                       </li>
                     {%- else -%}
@@ -266,10 +286,10 @@
                   {%- endfor -%}
 
                   {%- if paginate.next -%}
-                    <li>
-                      <a href="{{ paginate.next.url }}">
+                    <li class="num-of-page" data-url="{{ paginate.next.url }}" data-current_offset="{{ paginate.current_offset}}">
+                      <div>
                         <span aria-hidden="true">&raquo;</span>
-                      </a>
+                      </div>
                     </li>
                   {%- else -%}
                     <li class="disabled">
@@ -281,21 +301,23 @@
             {%- endif -%}
           </div>
         {%- else -%}
-          <div
-            id="product-list-foot"
-            data-url="{% if paginate.next %}{{paginate.next.url}}&section_id={{section.id}}{% endif %}"
-            data-section-id="{{section.id}}"
-          >
-            <div class="load">
-              <div class="line"></div>
-              <div class="line"></div>
-              <div class="line"></div>
+          <div id="delete-load">
+            <div
+              id="product-list-foot"
+              data-url="{% if paginate.next %}{{paginate.next.url}}&section_id={{section.id}}{% endif %}"
+              data-section-id="{{section.id}}"
+            >
+              <div class="load">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+              </div>
             </div>
           </div>
       {%- endcase -%}
-    {% endpaginate %}
+    </div>
   </div>
-</div>
+{% endpaginate %}
 
 <style></style>
 
