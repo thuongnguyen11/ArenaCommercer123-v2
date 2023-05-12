@@ -120,6 +120,7 @@ function inserProducts(data) {
   });
 
   getCurrentPage();
+  Observer123();
   // showing();
 
   // getDataLastPage(dataSortBy, dataFilter, dataPrice, pages);

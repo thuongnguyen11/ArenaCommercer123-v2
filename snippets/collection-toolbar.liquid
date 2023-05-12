@@ -1,0 +1,80 @@
+<div class="toolbar">
+    <div class="toolbar-left">
+      <div class="btn-filter" onclick="myFunction()">
+        <span class="filter-icon">{% render 'icon-filter' %}</span>
+        <span>Filter</span>
+      </div>
+      {% assign lastItem = paginate.items %}
+      {% assign startItem = paginate.current_offset | plus: 1 %}
+      {% assign endItem = paginate.current_offset | plus: items_per_page %}
+      {% assign pages = paginate.pages %}
+      <div id="none">
+        <span>
+          {% if lastItem == 0 %}
+            No product result
+          {% elsif pages > 0 %}
+            Showing
+            {% if pages == 1 %}
+              {{ lastItem }}
+            {% elsif pages > 1 %}
+              {% if lastItem == startItem %}
+                {{ lastItem }}
+              {% elsif endItem < lastItem %}
+                {{ startItem }}-{{ endItem }}
+              {% elsif endItem > lastItem %}
+                {{ startItem }}-{{ lastItem }}
+              {% endif %}
+            {% endif %}
+            of
+            {{ paginate.items }}
+            result
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+      <div>
+        <div class="product-sort-by">
+          <label for="sort-by">Sort by</label>
+          {% comment %} <select id="sort-by" class="sort-by selectpicker" name="sort_by" onchange="this.closest('form').submit();"> {% endcomment %}
+          <select id="sort-by" class="sort-by selectpicker" name="sort_by">
+            {%- for option in collection.sort_options %}
+              <option
+                value="{{ option.value }}"
+                {%- if option.value == sort_by %}
+                  selected="selected"
+                {%- endif %}
+              >
+                {{ option.name }}
+              </option>
+            {% endfor -%}
+          </select>
+          <br>
+        </div>
+      </div>
+
+      <div class="items-per-page">
+        <label for="cars">Show</label>
+        <select id="number-item" name="number" class="number-product selectpicker" onchange="selector()">
+          {%- for i in showingList -%}
+            {%- assign view = i | strip | times: 1 -%}
+            <option
+              {% if view == total %}
+                selected
+              {% endif -%}
+              value="{{view}}"
+            >
+              {{ view }}
+            </option>
+          {%- endfor -%}
+          {% if request.design_mode %}
+            <option value="{{items_per_page}}" selected style="display: none">
+              {{ items_per_page }}
+            </option>
+          {% endif %}
+        </select>
+      </div>
+    </div>
+  </div>

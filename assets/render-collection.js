@@ -58,6 +58,7 @@
       document.getElementById("none").appendChild(item);
     });
     getCurrentPage();
+    Observer123();
   }
   function selector() {
     jQuery.post(window.Shopify.routes.root + "cart/update.js", {

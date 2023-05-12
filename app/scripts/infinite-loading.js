@@ -19,8 +19,8 @@ function insertData(data, InfinitePoint) {
     const div = document.createElement("div");
     div.innerHTML = data;
     const new_url = div.querySelector("#product-list-foot").dataset.url;
-    console.log(new_url);
     
+    console.log(new_url);
     InfinitePoint.setAttribute("data-url", new_url);
     const products = div.querySelectorAll("#AjaxinateContainer > * ");
     products.forEach((item) => {
@@ -35,17 +35,17 @@ function insertData(data, InfinitePoint) {
 
     if (new_url == "") {
         document.getElementById("delete-load").innerHTML = "";
-        return;
-    }
+    } 
+  
 
 }
 
-function Observer() {
+ function Observer() {
     const newItem = document.getElementById("product-list-foot");
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                GetApi(entry.target.dataset.url, newItem);
+                entry.target.dataset.url.length&&GetApi(entry.target.dataset.url, newItem);
             }
         });
     });
@@ -54,19 +54,20 @@ function Observer() {
 
 Observer();
 
-function Srcoll() {
-    window.addEventListener(
-        "scroll",
-        () => {
-            Observer();
-        },
-        { once: true }
-    );
-}
+// function Srcoll() {
+//     window.addEventListener(
+//         "scroll",
+//         () => {
+//             // Observer();
+//             console.log("abc");
+//         },
+//         { once: true }
+//     );
+// }
 
-document.getElementById("collection-toolbar").addEventListener("change", () => {
-    Srcoll();
-});
+// document.getElementById("collection-toolbar").addEventListener("change", () => {
+//     Srcoll();
+// });
 
 // }
 // if (!newItem.dataset.url) {
@@ -77,3 +78,4 @@ document.getElementById("collection-toolbar").addEventListener("change", () => {
 // };
 
 // export default InfiniteAbc;
+window.Observer123 = Observer

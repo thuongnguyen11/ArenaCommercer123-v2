@@ -22,7 +22,6 @@
     });
     if (new_url == "") {
       document.getElementById("delete-load").innerHTML = "";
-      return;
     }
   }
   function Observer() {
@@ -30,19 +29,12 @@
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          GetApi(entry.target.dataset.url, newItem);
+          entry.target.dataset.url.length && GetApi(entry.target.dataset.url, newItem);
         }
       });
     });
     observer.observe(newItem);
   }
   Observer();
-  function Srcoll() {
-    window.addEventListener("scroll", () => {
-      Observer();
-    }, { once: true });
-  }
-  document.getElementById("collection-toolbar").addEventListener("change", () => {
-    Srcoll();
-  });
+  window.Observer123 = Observer;
 })();

@@ -4,6 +4,9 @@
     align-items: center;
     justify-content: space-between;
     height: 97px;
+    max-width: 1280px;
+    width: 100%;
+    margin-inline: auto !important;
   }
 
   .logo {
@@ -138,17 +141,20 @@
     color: #000;
     top: 25px;
   }
-  .sub-menu{
+
+  .sub-menu {
     display: block;
     margin: 5px 0;
   }
+
   .item-menu:hover .dropdown-menu {
     display: block;
   }
+
   .item-menu:hover .dropdown-menu .sub-menu {
     color: #000;
   }
-  
+
 
   @media (max-width: 1280px) {
     .logo {
@@ -239,7 +245,7 @@
       right: -6px;
     }
 
-    .btn-menu-header {  
+    .btn-menu-header {
       background-color: transparent;
       display: block;
       position: absolute;
