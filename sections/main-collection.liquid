@@ -19,100 +19,24 @@
   }
 </style>
 
-{% render 'breadcrumbs' %}
 {% paginate collection.products by items_per_page %}
   <div class="main-collection" id="main-collection">
-    <div class="title-collection">
-      {{ collection.title }}
-      <sup class="all-products-count">({{ collection.all_products_count }})</sup>
-    </div>
-    {% comment %}
-      <div class="bg-collection-img">
-        <div class="collection-image"><img src="{{ collection.featured_image | image_url }}"></div>
+    {% render 'breadcrumbs' %}
 
-      </div>
-    {% endcomment %}
-    <div class="description-collection">{{ collection.description }}</div>
+    {% if section.settings.style_collection_image == 'full-screen' %}
+      {% render 'full-screen-image' %}
+    {% else %}
+      {% render 'left-image' %}
+    {% endif %}
     <form
       class="collection-toolbar"
       id="collection-toolbar"
       action="{{ collection.url}}"
       onsubmit="event.preventDefault()"
     >
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <div class="btn-filter" onclick="myFunction()">
-            <img
-              src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/filter_alt_FILL0_wght400_GRAD0_opsz48.svg?v=1682494010"
-              class="filter-icon"
-            >
-            <span>Filter</span>
-          </div>
-          {% assign lastItem = paginate.items %}
-          {% assign startItem = paginate.current_offset | plus: 1 %}
-          {% assign endItem = paginate.current_offset | plus: items_per_page %}
-          <div id="none">
-            <span>
-              Showing
-              {% if lastItem == startItem %}
-                {{ lastItem }}
-              {% elsif endItem < lastItem %}
-                {{ startItem }}-{{ endItem }}
-              {% elsif endItem > lastItem %}
-                {{ startItem }}-{{ lastItem }}
-              {% endif %}
-              of
-              {{ paginate.items }}
-              result
-            </span>
-          </div>
-        </div>
 
-        <div class="toolbar-right">
-          {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-          <div>
-            <div class="product-sort-by">
-              <label for="sort-by">Sort by</label>
-              {% comment %} <select id="sort-by" class="sort-by selectpicker" name="sort_by" onchange="this.closest('form').submit();"> {% endcomment %}
-              <select id="sort-by" class="sort-by selectpicker" name="sort_by">
-                {%- for option in collection.sort_options %}
-                  <option
-                    value="{{ option.value }}"
-                    {%- if option.value == sort_by %}
-                      selected="selected"
-                    {%- endif %}
-                  >
-                    {{ option.name }}
-                  </option>
-                {% endfor -%}
-              </select>
-              <br>
-            </div>
-          </div>
-
-          <div class="items-per-page">
-            <label for="cars">Show</label>
-            <select id="number-item" name="number" class="number-product selectpicker" onchange="selector()">
-              {%- for i in showingList -%}
-                {%- assign view = i | strip | times: 1 -%}
-                <option
-                  {% if view == total %}
-                    selected
-                  {% endif -%}
-                  value="{{view}}"
-                >
-                  {{ view }}
-                </option>
-              {%- endfor -%}
-              {% if request.design_mode %}
-                <option value="{{items_per_page}}" selected style="display: none">
-                  {{ items_per_page }}
-                </option>
-              {% endif %}
-            </select>
-          </div>
-        </div>
-      </div>
+      
+      {%render 'collection-toolbar.liquid', showingList: showingList, paginate: paginate, items_per_page: items_per_page %}
 
       <div class="dropdown-filters" id="dropdown-filter">
         <div class="dropdown-filter">
@@ -253,12 +177,16 @@
 
       {% case section.settings.paginate_style %}
         {% when 'page' %}
-          <div class="paginate" id="paginate" data-pages="{{paginate.pages}}" >
+          <div class="paginate" id="paginate" data-pages="{{paginate.pages}}">
             {%- if paginate.pages > 1 -%}
               <nav role="navigation">
                 <ol class="pagination">
                   {%- if paginate.previous -%}
-                    <li class="num-of-page" data-url="{{ paginate.previous.url }}" data-current_offset="{{ paginate.current_offset}}">
+                    <li
+                      class="num-of-page"
+                      data-url="{{ paginate.previous.url }}"
+                      data-current_offset="{{ paginate.current_offset}}"
+                    >
                       <div>
                         <span aria-hidden="true">&laquo;</span>
                       </div>
@@ -271,7 +199,11 @@
 
                   {%- for part in paginate.parts -%}
                     {%- if part.is_link -%}
-                      <li class="num-of-page" data-url="{{part.title}}" data-current_offset="{{ paginate.current_offset}}">
+                      <li
+                        class="num-of-page"
+                        data-url="{{part.title}}"
+                        data-current_offset="{{ paginate.current_offset}}"
+                      >
                         <div class="paginate_url"><span class="visuallyhidden">page</span> {{ part.title }}</div>
                       </li>
                     {%- else -%}
@@ -286,7 +218,11 @@
                   {%- endfor -%}
 
                   {%- if paginate.next -%}
-                    <li class="num-of-page" data-url="{{ paginate.next.url }}" data-current_offset="{{ paginate.current_offset}}">
+                    <li
+                      class="num-of-page"
+                      data-url="{{ paginate.next.url }}"
+                      data-current_offset="{{ paginate.current_offset}}"
+                    >
                       <div>
                         <span aria-hidden="true">&raquo;</span>
                       </div>
@@ -306,12 +242,12 @@
               id="product-list-foot"
               data-url="{% if paginate.next %}{{paginate.next.url}}&section_id={{section.id}}{% endif %}"
               data-section-id="{{section.id}}"
-            >
+            >{% if paginate.next %}
               <div class="load">
                 <div class="line"></div>
                 <div class="line"></div>
                 <div class="line"></div>
-              </div>
+              </div>{% endif %}
             </div>
           </div>
       {%- endcase -%}
@@ -338,7 +274,6 @@
       "min": 3,
       "max": 6,
       "step": 1,
-      "unit": "px",
       "label": "Max number of item per row",
       "default": 4
     },
@@ -365,6 +300,22 @@
       "default": "page"
     },
     {
+      "type": "select",
+      "id": "style_collection_image",
+      "label": "Style collection image",
+      "options": [
+        {
+          "value": "full-screen",
+          "label": "Full-screen"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "full-screen"
+    },
+    {
       "type": "text",
       "id": "total_viewlist",
       "label": "Total view list",
@@ -377,3 +328,4 @@
 {{ 'infinite-loading.js' | asset_url | script_tag }}
 {{ 'render-collection.js' | asset_url | script_tag }}
 {{ 'range-price.js' | asset_url | script_tag }}
+{{ 'fixed-toolbar.js' | asset_url | script_tag }}

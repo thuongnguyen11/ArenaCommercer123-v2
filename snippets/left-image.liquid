@@ -1,0 +1,14 @@
+<div class="image-left">
+  <div class="title-collection">
+    {{ collection.title }}
+    <sup class="all-products-count">({{ collection.all_products_count }})</sup>
+  </div>
+  <div class="left-image">
+    {%if collection.image%}
+    <div class="bg-collection-img">
+      <div class="collection-image"><img src="{{ collection.image | image_url }}"></div>
+    </div>
+    {%endif%}
+    <div class="description-collection">{{ collection.description }}</div>
+  </div>
+</div>
