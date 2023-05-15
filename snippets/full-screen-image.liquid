@@ -1,6 +1,12 @@
 <div class="image-full-screen">
   <div class="bg-collection-img">
-    <div class="collection-image"><img src="{{ collection.image | image_url }}"></div>
+    <div class="collection-image">
+      {%if collection.image%}
+      <img src="{{ collection.image | image_url }}">
+      {%else%}
+      {{ 'image' | placeholder_svg_tag }}
+      {%endif%}
+    </div>
   </div>
   <div class="content-image">
     <div class="title-image">Collection</div>

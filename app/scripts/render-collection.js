@@ -1,4 +1,3 @@
-console.log(document.getElementById("sort-by"));
 document.getElementById("sort-by").addEventListener("change", updateData);
 document.getElementById("btn-submit-price").addEventListener("click", updateData);
   
@@ -15,7 +14,6 @@ function getCurrentPage() {
 }
 
 getCurrentPage();
-
 
 
 
@@ -54,6 +52,7 @@ function updateData(current_page) {
   dataPrice = `${minValue + maxValue}`;
   pushURL(dataSortBy, dataFilter, dataPrice, current_page);
   getURL();
+
 }
 
 // updateData();
@@ -113,14 +112,14 @@ function inserProducts(data) {
     document.getElementById("current-page").appendChild(item);
   });
 
-  const showingItem = div.querySelectorAll("#none > * ");
-  document.getElementById("none").innerHTML = "";
+  const showingItem = div.querySelectorAll("#showing > * ");
+  document.getElementById("showing").innerHTML = "";
   showingItem.forEach((item) => {
-    document.getElementById("none").appendChild(item);
+    document.getElementById("showing").appendChild(item);
   });
 
   getCurrentPage();
-  Observer123();
+  Observer();
   // showing();
 
   // getDataLastPage(dataSortBy, dataFilter, dataPrice, pages);
@@ -138,6 +137,9 @@ function selector() {
     }
   );
 }
+
+
+
 window.selector = selector;
 window.updateData = updateData;
 

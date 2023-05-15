@@ -1,6 +1,5 @@
 (() => {
   // app/scripts/render-collection.js
-  console.log(document.getElementById("sort-by"));
   document.getElementById("sort-by").addEventListener("change", updateData);
   document.getElementById("btn-submit-price").addEventListener("click", updateData);
   document.querySelectorAll(".checkbox").forEach((checkbox) => {
@@ -52,13 +51,13 @@
     products.forEach((item) => {
       document.getElementById("current-page").appendChild(item);
     });
-    const showingItem = div.querySelectorAll("#none > * ");
-    document.getElementById("none").innerHTML = "";
+    const showingItem = div.querySelectorAll("#showing > * ");
+    document.getElementById("showing").innerHTML = "";
     showingItem.forEach((item) => {
-      document.getElementById("none").appendChild(item);
+      document.getElementById("showing").appendChild(item);
     });
     getCurrentPage();
-    Observer123();
+    Observer();
   }
   function selector() {
     jQuery.post(window.Shopify.routes.root + "cart/update.js", {
