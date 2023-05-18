@@ -20,7 +20,7 @@
 </style>
 
 {% paginate collection.products by items_per_page %}
-  <div class="main-collection" id="main-collection">
+  <div class="main-collection" id="main-collection" data-section_id="{{section.id}}">
     {% render 'breadcrumbs' %}
 
     {% if section.settings.style_collection_image == 'full-screen' %}
@@ -34,14 +34,22 @@
       action="{{ collection.url}}"
       onsubmit="event.preventDefault()"
     >
-
-      
-      {%render 'collection-toolbar.liquid', showingList: showingList, paginate: paginate, items_per_page: items_per_page %}
+      {% render 'collection-toolbar.liquid',
+        showingList: showingList,
+        paginate: paginate,
+        items_per_page: items_per_page
+      %}
 
       <div class="dropdown-filters" id="dropdown-filter">
         <div class="dropdown-filter">
           {%- for filter in collection.filters -%}
-            <div class="filter">
+            <div
+              class="
+                filter
+                {%if filter.label == "Color"%}filter-color{%endif%}
+                {%if filter.label == "Product type"%}filter-product-type{%endif%}
+              "
+            >
               <div class="filter-label">
                 <span>{{ filter.label }}</span>
               </div>
@@ -65,12 +73,31 @@
                               {% if filter_value.count == 0 and filter_value.active == false -%}
                                 disabled
                               {%- endif %}
+
                               {% comment %} onchange="this.closest('form').submit();" {% endcomment %}
                             >
 
-                            <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="label-checkbox">
-                              {{- filter_value.label -}}
-                            </label>
+
+                            {% if filter.label == 'Color' %}
+                              <label
+                                for="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                                class="label-checkbox"
+                                data-title={{filter_value.value}}
+                                {% assign name_image = filter_value.value | split: ' ' | join: '_' %}
+                                {% assign image_url = name_image | append: '.jpg' %}
+                                style=" --color: url('{{images[ image_url ] | image_url}}'); background-color: {{filter_value.value}}"
+                              >
+                              </label>
+                              <span class="custom-tooltip">{{filter_value.value}}</span>
+
+                            {% else %}
+                              <label
+                                for="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                                class="label-checkbox "
+                              >
+                                {{- filter_value.label -}}
+                              </label>
+                            {% endif %}
                           </li>
                         {%- endfor -%}
                       </ul>
@@ -85,8 +112,7 @@
                     <div class="price">
                       <div id="slider" class="noUiSlider"></div>
                       <div class="price-input">
-                        <div>
-                          <label for="Filter-{{ filter.min_value.param_name }}" class="label-price">From</label>
+                        <div class="input-effect">
                           <input
                             name="{{ filter.min_value.param_name }}"
                             id="Filter-{{ filter.min_value.param_name }} "
@@ -95,16 +121,17 @@
                             {%- endif %}
                             value="0"
                             type="number"
-                            placeholder="0"
+                            placeholder="From"
                             min="0"
                             max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                             class="min-price"
                           >
-                          <span>{{ cart.currency.symbol }}</span>
+                          {% comment %} <label class="label-price">From</label> {% endcomment %}
+                          <span class="focus-border">{{ cart.currency.symbol }}</span>
                         </div>
+                        <div class="from-to"></div>
 
-                        <div>
-                          <label for="Filter-{{ filter.max_value.param_name }}" class="label-price">To</label>
+                        <div class="input-effect">
                           <input
                             name="{{ filter.max_value.param_name }}"
                             id="Filter-{{ filter.max_value.param_name }} "
@@ -112,12 +139,14 @@
                               value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
                             {%- endif %}
                             type="number"
-                            placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                            {% comment %} placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" {% endcomment %}
+                            placeholder="To"
                             value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                             min="0"
                             max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                             class="max-price"
                           >
+                          {% comment %} <label class="label-price">To</label> {% endcomment %}
                           <span>{{ cart.currency.symbol }}</span>
                         </div>
                       </div>
@@ -150,7 +179,7 @@
             id="product-{{ forloop.index | plus:paginate.current_offset }}"
           >
             <div>
-              <div class="card-image">
+              <div class="card-image" id="card-image" data-url="{{collection.metafields.custom.collection_test}}">
                 <div class="hover-image">
                   <img src="{{product.featured_media | image_url}}" class="product-image">
                 </div>
@@ -242,12 +271,14 @@
               id="product-list-foot"
               data-url="{% if paginate.next %}{{paginate.next.url}}&section_id={{section.id}}{% endif %}"
               data-section-id="{{section.id}}"
-            >{% if paginate.next %}
-              <div class="load">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-              </div>{% endif %}
+            >
+              {% if paginate.next %}
+                <div class="load">
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                </div>
+              {%- endif %}
             </div>
           </div>
       {%- endcase -%}

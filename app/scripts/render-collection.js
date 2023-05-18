@@ -1,7 +1,11 @@
+// document.getElementById
+
+
+const section_id = document.getElementById("main-collection").dataset.section_id;
 document.getElementById("sort-by").addEventListener("change", updateData);
 document.getElementById("btn-submit-price").addEventListener("click", updateData);
-  
-  
+
+
 document.querySelectorAll(".checkbox").forEach((checkbox) => {
   checkbox.addEventListener("change", updateData);
 });
@@ -99,7 +103,10 @@ function pushURL(dataSortBy, dataFilter, dataPrice, current_page) {
 
 }
 async function getURL() {
-  const response = await fetch(location.href);
+  let url = location.href;
+  url += url.includes('?') ? '&' : '?';
+  url += `section_id=${section_id}`;
+  const response = await fetch(url);
   const products = await response.text();
   inserProducts(products);
 }
