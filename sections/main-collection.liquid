@@ -60,7 +60,8 @@
                     <div class="vailability">
                       <ul>
                         {%- for filter_value in filter.values -%}
-                          <li>
+                          {% assign name_image = filter_value.value | downcase | split: ' ' | join: '_' %}
+                          <li class="swt-bg-{{name_image}}">
                             <input
                               class="checkbox"
                               type="checkbox"
@@ -77,18 +78,20 @@
                               {% comment %} onchange="this.closest('form').submit();" {% endcomment %}
                             >
 
-
                             {% if filter.label == 'Color' %}
                               <label
                                 for="Filter-{{ filter.param_name }}-{{ forloop.index }}"
-                                class="label-checkbox"
-                                data-title={{filter_value.value}}
-                                {% assign name_image = filter_value.value | split: ' ' | join: '_' %}
-                                {% assign image_url = name_image | append: '.jpg' %}
-                                style=" --color: url('{{images[ image_url ] | image_url}}'); background-color: {{filter_value.value}}"
+                                class="label-checkbox "
+                                data-title="{{filter_value.value}}"
+                                style="background: var(--color-bg); background-size: cover;"
+                                {% comment %}
+                                  {% assign name_image = filter_value.value | split: ' ' | join: '_' %}
+                                  {% assign image_url = name_image | append: '.jpg' %}
+                                  style=" --color: url('{{images[ image_url ] | image_url}}'); background-color: {{filter_value.value}}"
+                                {% endcomment %}
                               >
                               </label>
-                              <span class="custom-tooltip">{{filter_value.value}}</span>
+                              <span class="custom-tooltip">{{ filter_value.value }}</span>
 
                             {% else %}
                               <label

@@ -1,0 +1,146 @@
+{{ 'color-swatches.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="color-table"
+  style="{%if section.settings.show_color_table and request.design_mode%}display: block{%else%}display: none{%endif%}"
+>
+  <div class="overlay" id="overlay">
+    <div class="overlay-content">
+      <h3 class="title-color-table">Color table</h3>
+      <div class="color-items">
+        {%- assign list = section.settings.colors | split: ';' -%}
+        {%- for item in list -%}
+          {%- liquid
+            assign color_name = item | split: ':' | first | strip
+            assign color = item | split: ':' | last | strip
+          -%}
+          <style>
+            .swt-bg-{{color_name | downcase | split: ' ' | join: '_'}} {
+               --color-bg: {{ color }};
+            }
+          </style>
+          <div class="color-item">
+            <div class="color swt-bg-{{color_name | downcase}}" style="background: {{color}}"></div>
+            <div class="title-color">{{ color_name | capitalize }}</div>
+          </div>
+        {% endfor %}
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'block' %}
+              {% capture color %} 
+                  {%case block.settings.color_type %}
+                     {%when 'hex_color'%}
+                        {{block.settings.hex_color}}
+                     {%when 'gradient_color'%}
+                        {{block.settings.gradient_color}}    
+
+                     {%when 'color_image'%}
+                        url({{ block.settings.color_image | image_url }})
+
+                  {%endcase%}
+               {%- endcapture -%}
+              {% assign color_name = block.settings.text %}
+              <style>
+                .swt-bg-{{color_name | downcase | split: ' ' | join: '_'}} {
+                   --color-bg: {{ color }};
+                }
+              </style>
+
+              <div class="color-item">
+                <div class="color swt-bg-{{color_name | downcase}}" style="background: {{color}}"></div>
+                <div class="title-color">{{ color_name | capitalize }}</div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+    <button class="closebtn" onclick="closeNav()">
+      <img src="https://cdn.shopify.com/s/files/1/0744/2530/3338/files/x.png?v=1681192681">
+    </button>
+  </div>
+</div>
+
+<script>
+  function closeNav() {
+    document.getElementById('overlay').style.width = '0%';
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Swatch color",
+  "tag": "section",
+  "class": "swatch-color",
+  "presets": [
+    {
+      "name": "Swatch color"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product", "collection"],
+    "groups": ["custom.color_swatches"]
+  },
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "colors",
+      "label": "Hex code define",
+      "info": "Color Name: #hexcode; ...."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_table",
+      "label": "Show color table",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block",
+      "name": "Color item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Color name"
+        },
+        {
+          "type": "radio",
+          "id": "color_type",
+          "label": "Use style from",
+          "options": [
+            {
+              "value": "hex_color",
+              "label": "Hex color"
+            },
+            {
+              "value": "gradient_color",
+              "label": "Gradient color"
+            },
+            {
+              "value": "color_image",
+              "label": "Image"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "hex_color",
+          "label": "Color"
+        },
+        {
+          "type": "color_background",
+          "id": "gradient_color",
+          "label": "Gradient Color"
+        },
+        {
+          "type": "image_picker",
+          "id": "color_image",
+          "label": "Background image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

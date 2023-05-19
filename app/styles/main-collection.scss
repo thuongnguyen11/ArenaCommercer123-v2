@@ -585,11 +585,10 @@
                                 }
 
                                 label {
-                                    position: relative;
                                     appearance: none;
                                     border-radius: 50%;
-                                    background-image: var(--color);
-                                    background-size: cover;
+                                    // background-image: var(--color);
+
                                     background-repeat: no-repeat;
                                     width: 30px !important;
                                     height: 30px !important;

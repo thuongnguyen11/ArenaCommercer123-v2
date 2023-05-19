@@ -79,6 +79,11 @@
       {% section 'new-newsletter' %}
       {% section 'accessories' %}
     {% endcomment %}
+    
+    {% section 'new-header' %}
+    {%if request.page_type == "collection" or request.page_type == "product" %}
+    {% sections 'swatches' %}
+    {%endif%}
     {{ content_for_layout }}
     {% section 'new-footer' %}
 
